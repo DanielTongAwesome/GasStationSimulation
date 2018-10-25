@@ -7,10 +7,18 @@
 
 // class for customer --- ActiveClass
 class Customer : public ActiveClass {
+
 private:
+	// common variable
 	int destination_pump_number;
+
+	// initial data struct for customer
 	struct customerInfo customerData;
+
+	// pipeline 
 	CTypedPipe<struct customerInfo> *pipeline;
+	
+	// gate semaphore
 	CSemaphore *EntryGate;
 	CSemaphore *ExitGate;
 	CSemaphore *Full;
@@ -23,6 +31,8 @@ public:
 	Customer(int go_to_pump);
 	// destructor 
 	~Customer(void);
+
+private:
 	// running main
 	int main(void);
 };

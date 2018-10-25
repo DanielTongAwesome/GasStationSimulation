@@ -4,6 +4,8 @@
 #include <sstream>
 #include <stdio.h>
 
+
+// name array: select names from the following array
 const char* names_array[] = { "Daniel", "Nancy", "CoolGuy", "Ben", "charlie", "Megan",
 "Spidermen", "Batmen", "Funnykids",  "Bugs", "Fatima", "Steven", "Luis","Dylan", "James",
 "Ramon", "Noah", "Nathan", "Geek", "Diego", "Carlos", "William", "Logan", "Robert", "Gilbert",
@@ -13,6 +15,8 @@ const char* names_array[] = { "Daniel", "Nancy", "CoolGuy", "Ben", "charlie", "M
 
 using namespace std;
 
+
+// customer constructor
 Customer::Customer(int go_to_pump)
 {
 	// assign each car with a pump number
@@ -20,7 +24,11 @@ Customer::Customer(int go_to_pump)
 
 	// credit card info 
 	//srand(time(NULL));
-	customerData.creditCard = rand() % 10000000000000000;
+	customerData.creditCard_1 = rand() % 9000 + 1000;
+	customerData.creditCard_2 = rand() % 9000 + 1000;
+	customerData.creditCard_3 = rand() % 9000 + 1000;
+	customerData.creditCard_4 = rand() % 9000 + 1000;
+
 
 	// assign names to each car user
 	//srand(time(NULL));
@@ -44,8 +52,10 @@ Customer::Customer(int go_to_pump)
 	}
 
 	customerData.fuelAmount = rand() % MAX_AMOUNT;
+	
 	// initial print
-	printf("Creating customer %s and queing at Pump %d...\n", customerData.name, destination_pump_number);
+	printf("Creating customer %-*s and queing at Pump %d...\n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
+	
 	// set up destination pump
 	std::ostringstream oss;
 	string pump = "Pump";
@@ -54,72 +64,59 @@ Customer::Customer(int go_to_pump)
 
 	// set up pipline to talk with pump and mutex
 	pipeline = new CTypedPipe<struct customerInfo>(pump, 1);
-	/*pipelineMutex = new CMutex(pump);
-	pump = "Pump2";
-	pump += oss.str();
-	pipelineMutex2 = new CMutex(pump);*/
+	
+
+	// create semaphores
 	EntryGate = new CSemaphore(pump + "EntryGate", 0, 1);
 	ExitGate = new CSemaphore(pump + "ExitGate", 0, 1);
 	Full = new CSemaphore(pump + "Full", 0, 1);
 	Empty = new CSemaphore(pump + "Empty", 0, 1);
 
-
-	// set up semaphore for entering the pump
-	// create semaphore for each car waitting on the line
-	/*
-	string EnteryGateAddress = "EnteryGate";
-	string ExistGateAddress = "ExistGate";
-	string FullAddress = "Full";
-	string EmptyAddress = "Empty";
-	EnteryGateAddress += oss.str();
-	ExistGateAddress += oss.str();
-	FullAddress += oss.str();
-	EmptyAddress += oss.str();
-	
-	EntryGate = new CSemaphore(EnteryGateAddress, 0, 1);
-	ExitGate = new CSemaphore(ExistGateAddress, 0, 1);
-	Empty = new CSemaphore(EmptyAddress, 0, 1);
-	Full = new CSemaphore(FullAddress, 0, 1);
-	*/
 }
 
 
 
+// customer main
 int Customer::main(void)
 {
-	// waitting to use the pump
-	//EntryGate->Wait();
-	//Full->Signal();
-
+	// customer running logic
 	while (1) {
 		
 		// traffic logic: entering the pump
 		EntryGate->Wait();
 		Full->Signal();
 
-		printf("I am customer %s, want to use the pump %d \n", customerData.name, destination_pump_number);
 
+		printf("I am customer %-*s want to use the pump %d \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
+
+		// write customer data into pipeline
 		pipeline->Write(&customerData);
-		SLEEP(5000);
+		SLEEP(2000);
 
-		printf("Customer %s has swiped his card at Pump %d ... \n", customerData.name, destination_pump_number);
-		Sleep(1000);
+		// customer swip credit card 
+		printf("Customer %-*s has swiped his card at Pump %d ... \n", MAX_NAME_LENGTH,customerData.name, destination_pump_number);
+		Sleep(2000);
+
+		// customer select pump
 		if (customerData.fuelType == FUEL82)
-			printf("Customer %s has selected fuel grade OCT82... \n", customerData.name);
+			printf("Customer %-*s has selected fuel grade OCT82... \n", MAX_NAME_LENGTH, customerData.name);
 		else if (customerData.fuelType == FUEL87)
-			printf("Customer %s has selected fuel grade OCT87... \n", customerData.name);
+			printf("Customer %-*s has selected fuel grade OCT87... \n", MAX_NAME_LENGTH, customerData.name);
 		else if (customerData.fuelType == FUEL92)
-			printf("Customer %s has selected fuel grade OCT92... \n", customerData.name);
+			printf("Customer %-*s has selected fuel grade OCT92... \n", MAX_NAME_LENGTH, customerData.name);
 		else if (customerData.fuelType == FUEL92)
-			printf("Customer %s has selected fuel grade OCT97... \n", customerData.name);
-		Sleep(1000);
+			printf("Customer %-*s has selected fuel grade OCT97... \n", MAX_NAME_LENGTH, customerData.name);
+		Sleep(2000);
 		
+
+		// printing indicate customer is leaving 
+		printf("Customer %-*s is leaving the pump %d \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
+
 		// traffic logic: exiting the pump
 		ExitGate->Wait();
 		Empty->Signal();
 
-		// printing indicate customer is leaving 
-		printf("Customer %s is leaving the pump %d \n", customerData.name, destination_pump_number);
+	
 	}
 
 
@@ -128,10 +125,10 @@ int Customer::main(void)
 }
 
 
+// customer destructor
 Customer::~Customer(void)
 {
-	/*delete pipelineMutex;
-	delete pipelineMutex2;*/
+	// delete the created pointer to release memeory
 	delete EntryGate;
 	delete ExitGate;
 	delete Full;

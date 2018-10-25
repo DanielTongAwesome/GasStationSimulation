@@ -7,11 +7,19 @@
 
 // pump class ---- ActiveClass
 class Pump : public ActiveClass {
+
 private:
+	// common variable
 	int pumpID;
 	string pumpName;
+
+	// initial data struct for pump
 	struct pumpInfo *myPumpData;
+	
+	// pipeline
 	CTypedPipe<struct customerInfo> *pipeline;
+	
+	// gate semaphore
 	CSemaphore *EntryGate;
 	CSemaphore *ExitGate;
 	CSemaphore *Full;
@@ -20,6 +28,7 @@ private:
 
 
 public:
+
 	// constructor
 	Pump(int pump_ID);
 	// destructor
@@ -27,6 +36,7 @@ public:
 	
 
 private:
+
 	// running main
 	int main(void);
 };

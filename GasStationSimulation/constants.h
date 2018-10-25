@@ -12,13 +12,16 @@
 #define FUEL92 92
 #define FUEL97 97
 #define MAX_AMOUNT 70
-#define MAX_NAME_LENGTH 20
+#define MAX_NAME_LENGTH 13
 
 
 // customer information data struct
 struct customerInfo {
 	char name[MAX_NAME_LENGTH];
-	int creditCard;
+	int creditCard_1;
+	int creditCard_2;
+	int creditCard_3;
+	int creditCard_4;
 	int fuelType;
 	int fuelAmount;
 };
@@ -27,7 +30,10 @@ struct customerInfo {
 struct pumpInfo {
 	int pumpID;
 	char userName[MAX_NAME_LENGTH];
-	int creditCard;
+	int creditCard_1;
+	int creditCard_2;
+	int creditCard_3;
+	int creditCard_4;
 	int fuelType;
 	int fuelAmount;
 };

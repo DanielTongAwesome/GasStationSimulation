@@ -4,8 +4,10 @@
 
 int main() {
 	
+	// initial pump pointer
 	Pump *pumps[NUMBER_OF_PUMPS];
 
+	// create each pump and resume
 	for (int i = 0; i < NUMBER_OF_PUMPS; i++) {
 		pumps[i] = new Pump(i + 1);
 		pumps[i]->Resume();
@@ -20,7 +22,7 @@ int main() {
 	/*Pump *pump[1];
 	pump[1] = new Pump(1);
 	pump[1]->Resume();
-*/
+    */
 
 	//system("PAUSE");
 	return 0;
