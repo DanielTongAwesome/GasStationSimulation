@@ -7,10 +7,19 @@
 #define TANK_SIZE 500
 #define MIN_LEVEL 200
 #define PUMP_RATE 0.5
+
 #define FUEL82 82
+#define FUEL82_PRICE 1.459
+
 #define FUEL87 87
+#define FUEL87_PRICE 1.629
+
 #define FUEL92 92
+#define FUEL92_PRICE 1.709
+
 #define FUEL97 97
+#define FUEL97_PRICE 1.881
+
 #define MAX_AMOUNT 70
 #define MAX_NAME_LENGTH 13
 
@@ -24,6 +33,7 @@ struct customerInfo {
 	int creditCard_4;
 	int fuelType;
 	int fuelAmount;
+	time_t purchaseTime;
 };
 
 // pump information data struct
@@ -36,6 +46,7 @@ struct pumpInfo {
 	int creditCard_4;
 	int fuelType;
 	int fuelAmount;
+	time_t purchaseTime;
 };
 
 #endif

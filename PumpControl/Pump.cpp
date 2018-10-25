@@ -68,6 +68,10 @@ int Pump::main(void)
 			currentCustomer.fuelType,
 			currentCustomer.fuelAmount);
 		
+
+
+
+
 		SLEEP(1000);
 		
 		// traffic logic: finshed pumping and exict from the waitlist

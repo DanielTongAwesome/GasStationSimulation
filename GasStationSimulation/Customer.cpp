@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 
+
 // name array: select names from the following array
 const char* names_array[] = { "Daniel", "Nancy", "CoolGuy", "Ben", "charlie", "Megan",
 "Spidermen", "Batmen", "Funnykids",  "Bugs", "Fatima", "Steven", "Luis","Dylan", "James",
@@ -52,7 +53,7 @@ Customer::Customer(int go_to_pump)
 	}
 
 	customerData.fuelAmount = rand() % MAX_AMOUNT;
-	
+
 	// initial print
 	printf("Creating customer %-*s and queing at Pump %d...\n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
 	
@@ -95,7 +96,11 @@ int Customer::main(void)
 
 		// customer swip credit card 
 		printf("Customer %-*s has swiped his card at Pump %d ... \n", MAX_NAME_LENGTH,customerData.name, destination_pump_number);
+		customerData.purchaseTime = std::time(0);
+	
 		Sleep(2000);
+		
+		
 
 		// customer select pump
 		if (customerData.fuelType == FUEL82)
