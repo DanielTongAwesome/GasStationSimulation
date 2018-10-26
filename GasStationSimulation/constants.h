@@ -13,6 +13,7 @@
 #define FUEL97 97
 #define MAX_AMOUNT 70
 #define MAX_NAME_LENGTH 13
+#define MAX_TANK_LITRES 2000
 
 
 // customer information data struct
