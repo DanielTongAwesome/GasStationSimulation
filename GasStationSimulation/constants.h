@@ -50,5 +50,12 @@ struct pumpInfo {
 	time_t purchaseTime;
 };
 
+// fuel tank data struct
+struct fuelTankInfo {
+	int fuel_tank_level[NUMBER_OF_TANKS];
+	int fuel_price[NUMBER_OF_TANKS];
+};
+
+
 
 #endif
