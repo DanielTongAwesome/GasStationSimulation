@@ -18,8 +18,15 @@ int main() {
 	// exec file path
 	string pump_exe_file_path = "C:\\Users\\13358\\Dropbox\\CPEN333Windows\\GasStationSimulation\\Debug\\";
 	string pump_exec = "PumpControl.exe";
-	// run the process
+	string GSC_exec = "GasStationComputer.exe";
+	// run the process -- Pump
 	CProcess Pump_main(pump_exe_file_path + pump_exec,
+		NORMAL_PRIORITY_CLASS,			// priority
+		OWN_WINDOW,						// process has its own window					
+		ACTIVE							// process is active immediately
+	);
+	// run the process -- GSC
+	CProcess GSC_main(pump_exe_file_path + GSC_exec,
 		NORMAL_PRIORITY_CLASS,			// priority
 		OWN_WINDOW,						// process has its own window					
 		ACTIVE							// process is active immediately

@@ -12,18 +12,27 @@ private:
 	// common variable
 	int pumpID;
 	string pumpName;
+	string pumpPS;
+	string pumpCS;
 
 	// initial data struct for pump
 	struct pumpInfo *myPumpData;
 	
 	// pipeline
 	CTypedPipe<struct customerInfo> *pipeline;
-	
+
 	// gate semaphore
 	CSemaphore *EntryGate;
 	CSemaphore *ExitGate;
 	CSemaphore *Full;
 	CSemaphore *Empty;
+
+	// datapool
+	CDataPool *pumpDatapool;
+
+	// datapool semaphore
+	CSemaphore *PS;
+	CSemaphore *CS;
 
 
 

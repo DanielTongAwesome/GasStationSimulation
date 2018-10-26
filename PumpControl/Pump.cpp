@@ -16,6 +16,8 @@ Pump::Pump(int pump_ID)
 	std::ostringstream oss;
 	oss << pumpID;
 	pumpName = "Pump" + oss.str();
+	pumpPS = "PS" + oss.str();
+	pumpCS = "CS" + oss.str();
 
 	// set up pipline to talk with pump and mutex
 	pipeline = new CTypedPipe<struct customerInfo>(pumpName, 1);
@@ -26,6 +28,13 @@ Pump::Pump(int pump_ID)
 	Full = new CSemaphore(pumpName + "Full", 0, 1);
 	Empty = new CSemaphore(pumpName + "Empty", 0, 1);
 
+	// create datapool
+	pumpDatapool = new CDataPool(pumpName, sizeof(pumpInfo));
+	myPumpData = (struct pumpInfo *)(pumpDatapool->LinkDataPool());
+
+	// datapool semaphores
+	PS = new CSemaphore(pumpPS, 0, 1);
+	CS = new CSemaphore(pumpCS, 1, 1);
 }
 
 
@@ -68,6 +77,19 @@ int Pump::main(void)
 			currentCustomer.fuelType,
 			currentCustomer.fuelAmount);
 		
+		CS->Wait();
+		
+		myPumpData->pumpID = pumpID;
+		strcpy_s(myPumpData->userName, currentCustomer.name);
+		myPumpData->creditCard_1 = currentCustomer.creditCard_1;
+		myPumpData->creditCard_2 = currentCustomer.creditCard_2;
+		myPumpData->creditCard_3 = currentCustomer.creditCard_3;
+		myPumpData->creditCard_4 = currentCustomer.creditCard_4;
+		myPumpData->fuelType = currentCustomer.fuelType;
+		myPumpData->fuelAmount = currentCustomer.fuelAmount;
+		myPumpData->purchaseTime = currentCustomer.purchaseTime;
+		
+		PS->Signal();
 
 
 
