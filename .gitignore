@@ -1,3 +1,3 @@
 # add ignore file list
 *.vs
-*Debug
+Debug/
