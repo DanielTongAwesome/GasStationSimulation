@@ -34,6 +34,9 @@ private:
 	CSemaphore *PS;
 	CSemaphore *CS;
 
+	// GSC Command Semaphore
+	CSemaphore *GSCCommand;
+
 
 
 public:

@@ -35,6 +35,10 @@ Pump::Pump(int pump_ID)
 	// datapool semaphores
 	PS = new CSemaphore(pumpPS, 0, 1);
 	CS = new CSemaphore(pumpCS, 1, 1);
+
+	// GSC Command Semaphore
+	GSCCommand = new CSemaphore(pumpName + "GSCCommand", 0, 1);
+
 }
 
 
@@ -77,6 +81,7 @@ int Pump::main(void)
 			currentCustomer.fuelType,
 			currentCustomer.fuelAmount);
 		
+		// wait for reading the dispense command
 		CS->Wait();
 		
 		myPumpData->pumpID = pumpID;
@@ -105,12 +110,12 @@ int Pump::main(void)
 			}
 			Sleep(30);
 			printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);
-
+			GSCCommand->Signal();
 		}
 		PS->Signal();
 
 		SLEEP(1000);
-		
+		printf("Customer %-*s is leaving the pump \n", MAX_NAME_LENGTH, currentCustomer.name);
 		// traffic logic: finshed pumping and exict from the waitlist
 		ExitGate->Signal();
 		Empty->Wait();

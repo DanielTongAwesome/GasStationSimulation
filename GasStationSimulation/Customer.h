@@ -24,7 +24,8 @@ private:
 	CSemaphore *Full;
 	CSemaphore *Empty;
 
-
+	// GSC Command Semaphore
+	CSemaphore *GSCCommand;
 	
 public:
 	// constructor

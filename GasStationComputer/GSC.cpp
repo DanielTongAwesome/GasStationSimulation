@@ -23,16 +23,17 @@ void ReadKey()
 	command1 = _getch();
 	_putch(command1);
 	switch (command1) {
-	case '1': 		dispense[0] = true; break;
-	case '2': 		dispense[1] = true; break;
-	case '3': 		dispense[2] = true; break;
-	case '4': 		dispense[3] = true; break;
+	case '1':	dispense[0] = true; break;
+	case '2': 	dispense[1] = true; break;
+	case '3': 	dispense[2] = true; break;
+	case '4': 	dispense[3] = true; break;
 	default: break;
 
 	}
 
 
 }
+
 UINT __stdcall pump_user_status_thread(void *args) {
 
 	int Thread_Number = *(int *)(args);
@@ -56,37 +57,38 @@ UINT __stdcall pump_user_status_thread(void *args) {
 	CSemaphore *PS = new CSemaphore (pumpPS, 0, 1);
 	CSemaphore *CS = new CSemaphore (pumpCS, 1, 1);
 
+	
 	while (1) {
 		// check which producer is pushing the message first
-		if (PS->Read() > 0) {
-			
-			PS->Wait();
+		PS->Wait();
 
-			printf("Pipeline %d Current user: %-*s  CreditCard: %d %d %d %d  FuelType: %d  Amount: %d \n",
-				pumpData->pumpID,
-				MAX_NAME_LENGTH,
-				pumpData->userName,
-				pumpData->creditCard_1,
-				pumpData->creditCard_2,
-				pumpData->creditCard_3,
-				pumpData->creditCard_4,
-				pumpData->fuelType,
-				pumpData->fuelAmount);
+		printf("Pipeline %d Current user: %-*s  CreditCard: %d %d %d %d  FuelType: %d  Amount: %d \n",
+			pumpData->pumpID,
+			MAX_NAME_LENGTH,
+			pumpData->userName,
+			pumpData->creditCard_1,
+			pumpData->creditCard_2,
+			pumpData->creditCard_3,
+			pumpData->creditCard_4,
+			pumpData->fuelType,
+			pumpData->fuelAmount);
 
+		// testing 
+		
+		// when GSC haven't authorise or reject it
+		while (dispense[Thread_Number - 1] != true) {
 
-			while (dispense[Thread_Number - 1] != true) {} // when GSC haven't authorise or reject it
-			if (dispense[Thread_Number - 1] = true)
-			{
-				pumpData->dispense_enable = 1;
-				printf("pump%d->dispense_enable = 1 \n", Thread_Number);
-				dispense[Thread_Number - 1] = false;
-			}
-
-			CS->Signal();
+		} 
+		if (dispense[Thread_Number - 1] = true)
+		{
+			pumpData->dispense_enable = 1;
+			printf("pump%d->dispense_enable = 1 \n", Thread_Number);
+			dispense[Thread_Number - 1] = false;
 		}
-		else {
-			continue;
-		}
+
+		CS->Signal();
+		PS->Wait();
+		CS->Signal();
 	}
 
 	return 0;

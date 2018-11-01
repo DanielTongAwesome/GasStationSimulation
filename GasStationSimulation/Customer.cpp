@@ -73,6 +73,9 @@ Customer::Customer(int go_to_pump)
 	Full = new CSemaphore(pump + "Full", 0, 1);
 	Empty = new CSemaphore(pump + "Empty", 0, 1);
 
+	// create GSC Semaphore
+	GSCCommand = new CSemaphore(pump+ "GSCCommand", 0, 1);
+
 }
 
 
@@ -109,13 +112,15 @@ int Customer::main(void)
 			printf("Customer %-*s has selected fuel grade OCT87... \n", MAX_NAME_LENGTH, customerData.name);
 		else if (customerData.fuelType == FUEL92)
 			printf("Customer %-*s has selected fuel grade OCT92... \n", MAX_NAME_LENGTH, customerData.name);
-		else if (customerData.fuelType == FUEL92)
+		else if (customerData.fuelType == FUEL97)
 			printf("Customer %-*s has selected fuel grade OCT97... \n", MAX_NAME_LENGTH, customerData.name);
 		Sleep(2000);
 		
-
+		// wait the GSC Command
 		// printing indicate customer is leaving 
+		GSCCommand->Wait();
 		printf("Customer %-*s is leaving the pump %d \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
+	
 
 		// traffic logic: exiting the pump
 		ExitGate->Wait();
