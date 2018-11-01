@@ -91,8 +91,23 @@ int Pump::main(void)
 		
 		PS->Signal();
 
+		// when receive authorisation from GSC via the datapool
+		CS->Wait();
+		if (myPumpData->dispense_enable == 1)
+		{
+			myPumpData->dispensedFuel = 0;    // reset pump dispensed fuel first
+			while (myPumpData->fuelAmount - myPumpData->dispensedFuel >= 0.5)
+			{
+				myPumpData->dispensedFuel += PUMP_RATE;	//add dispensed Fuel
+				// update the dispensed fuel to DOS
+				myPumpData->cost = myPumpData->dispensedFuel *myPumpData->SelectedFuelPrice; // calculated cost
+				// update cost to the DOS
+			}
+			Sleep(30);
+			printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);
 
-
+		}
+		PS->Signal();
 
 		SLEEP(1000);
 		

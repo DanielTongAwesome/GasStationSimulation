@@ -18,12 +18,6 @@ int main() {
 		continue;
 	}
 
-	/*Test code for customer pipeline*/
-	/*Pump *pump[1];
-	pump[1] = new Pump(1);
-	pump[1]->Resume();
-    */
-
-	//system("PAUSE");
+	
 	return 0;
 }

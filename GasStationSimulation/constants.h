@@ -34,6 +34,7 @@ struct customerInfo {
 	int creditCard_4;
 	int fuelType;
 	int fuelAmount;
+	float SelectedFuelPrice;
 	time_t purchaseTime;
 };
 
@@ -47,6 +48,11 @@ struct pumpInfo {
 	int creditCard_4;
 	int fuelType;
 	int fuelAmount;
+	float SelectedFuelPrice;
+	int dispense_enable;
+	float dispensedFuel;
+	float cost;
+
 	time_t purchaseTime;
 };
 
