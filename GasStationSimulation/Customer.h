@@ -33,6 +33,7 @@ public:
 	// destructor 
 	~Customer(void);
 
+
 private:
 	// running main
 	int main(void);

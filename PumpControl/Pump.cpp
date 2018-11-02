@@ -80,10 +80,11 @@ int Pump::main(void)
 			currentCustomer.creditCard_4,
 			currentCustomer.fuelType,
 			currentCustomer.fuelAmount);
-		
-		// wait for reading the dispense command
+
+
+
+		// save the current Customer's  information into datapool
 		CS->Wait();
-		
 		myPumpData->pumpID = pumpID;
 		strcpy_s(myPumpData->userName, currentCustomer.name);
 		myPumpData->creditCard_1 = currentCustomer.creditCard_1;
@@ -92,11 +93,14 @@ int Pump::main(void)
 		myPumpData->creditCard_4 = currentCustomer.creditCard_4;
 		myPumpData->fuelType = currentCustomer.fuelType;
 		myPumpData->fuelAmount = currentCustomer.fuelAmount;
+		myPumpData->SelectedFuelPrice = currentCustomer.SelectedFuelPrice;
 		myPumpData->purchaseTime = currentCustomer.purchaseTime;
-		
-		PS->Signal();
 
-		// when receive authorisation from GSC via the datapool
+		PS->Signal(); 
+
+
+		// when GSC has read data from datapool and 
+		// receive authorisation from GSC via the datapool
 		CS->Wait();
 		if (myPumpData->dispense_enable == 1)
 		{
@@ -113,6 +117,7 @@ int Pump::main(void)
 			GSCCommand->Signal();
 		}
 		PS->Signal();
+
 
 		SLEEP(1000);
 		printf("Customer %-*s is leaving the pump \n", MAX_NAME_LENGTH, currentCustomer.name);

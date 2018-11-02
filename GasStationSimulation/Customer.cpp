@@ -30,29 +30,32 @@ Customer::Customer(int go_to_pump)
 	customerData.creditCard_3 = rand() % 9000 + 1000;
 	customerData.creditCard_4 = rand() % 9000 + 1000;
 
-
 	// assign names to each car user
 	//srand(time(NULL));
 	int choosen_pos = rand() % 40;
 	strcpy_s(customerData.name, names_array[choosen_pos]);
 
-	// fuel and fuel amount
-	//srand(time(NULL));
+	// fuel type and Price
 	int temp = rand() % 4;
 	if (temp == 0) {
 		customerData.fuelType = FUEL82;
+		customerData.SelectedFuelPrice = FUEL82_PRICE;
 	}
 	else if (temp == 1) {
 		customerData.fuelType = FUEL87;
+		customerData.SelectedFuelPrice = FUEL87_PRICE;
 	}
 	else if (temp == 2) {
 		customerData.fuelType = FUEL92;
+		customerData.SelectedFuelPrice = FUEL92_PRICE;
 	}
 	else if (temp == 3) {
 		customerData.fuelType = FUEL97;
+		customerData.SelectedFuelPrice = FUEL97_PRICE;
 	}
 
-	customerData.fuelAmount = rand() % MAX_AMOUNT;
+	//fuel amount
+	customerData.fuelAmount = rand() % (MAX_AMOUNT-10) +10 ; // "(MAX_AMOUNT-10) + 10" to make the minimal fuel amount is 10L
 
 	// initial print
 	printf("Creating customer %-*s and queing at Pump %d...\n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
@@ -90,22 +93,23 @@ int Customer::main(void)
 		EntryGate->Wait();
 		Full->Signal();
 
-
+		// customer select pump
 		printf("I am customer %-*s want to use the pump %d \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
 
 		// write customer data into pipeline
 		pipeline->Write(&customerData);
-		SLEEP(2000);
+		SLEEP(1000);
 
 		// customer swip credit card 
 		printf("Customer %-*s has swiped his card at Pump %d ... \n", MAX_NAME_LENGTH,customerData.name, destination_pump_number);
-		customerData.purchaseTime = std::time(0);
-	
-		Sleep(2000);
+		customerData.purchaseTime = std::time(0);	
+		Sleep(1000);
 		
-		
+		// customer Removing the gas hose from the pump
+		printf("Customer %-*s is removing the gas hose from the pump  %d  ... \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
+		SLEEP(1000);
 
-		// customer select pump
+		// customer select fuelType
 		if (customerData.fuelType == FUEL82)
 			printf("Customer %-*s has selected fuel grade OCT82... \n", MAX_NAME_LENGTH, customerData.name);
 		else if (customerData.fuelType == FUEL87)
@@ -114,11 +118,16 @@ int Customer::main(void)
 			printf("Customer %-*s has selected fuel grade OCT92... \n", MAX_NAME_LENGTH, customerData.name);
 		else if (customerData.fuelType == FUEL97)
 			printf("Customer %-*s has selected fuel grade OCT97... \n", MAX_NAME_LENGTH, customerData.name);
-		Sleep(2000);
-		
+		Sleep(1000);
+				
 		// wait the GSC Command
-		// printing indicate customer is leaving 
 		GSCCommand->Wait();
+
+		// customer Returning the hose to the pump.
+		printf("Customer %-*s is returning the hose to the pump %d  ... \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
+		Sleep(1000);
+
+		// printing indicate customer is leaving 
 		printf("Customer %-*s is leaving the pump %d \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
 	
 

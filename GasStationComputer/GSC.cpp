@@ -57,12 +57,13 @@ UINT __stdcall pump_user_status_thread(void *args) {
 	CSemaphore *PS = new CSemaphore (pumpPS, 0, 1);
 	CSemaphore *CS = new CSemaphore (pumpCS, 1, 1);
 
-	
+	// GSC Command Semaphore
+
 	while (1) {
+
 		// check which producer is pushing the message first
 		PS->Wait();
-
-		printf("Pipeline %d Current user: %-*s  CreditCard: %d %d %d %d  FuelType: %d  Amount: %d \n",
+		printf("Pump %d Current user: %-*s  CreditCard: %d %d %d %d  FuelType: %d  Amount: %d \n",
 			pumpData->pumpID,
 			MAX_NAME_LENGTH,
 			pumpData->userName,
@@ -73,26 +74,28 @@ UINT __stdcall pump_user_status_thread(void *args) {
 			pumpData->fuelType,
 			pumpData->fuelAmount);
 
-		// testing 
-		
-		// when GSC haven't authorise or reject it
-		while (dispense[Thread_Number - 1] != true) {
 
-		} 
+		// forever loop at here when GSC haven't authorise or reject it
+		while (dispense[Thread_Number - 1] != true) {} 
+		// when gas station attendant gives a command to pump
 		if (dispense[Thread_Number - 1] = true)
 		{
 			pumpData->dispense_enable = 1;
-			printf("pump%d->dispense_enable = 1 \n", Thread_Number);
+			printf("pump%d is dispending fuel \n", Thread_Number);
 			dispense[Thread_Number - 1] = false;
 		}
-
 		CS->Signal();
+
+
+		// Up dated the Gas Computer how much oil has been dispensed and the cost
 		PS->Wait();
+		printf("dispensed Fuel is %.1f, and cost is %.1f  \n", pumpData->dispensedFuel, pumpData->cost);		
 		CS->Signal();
 	}
 
 	return 0;
 }
+
 
 
 int GSC::main(void) {
@@ -117,6 +120,5 @@ int GSC::main(void) {
 		Datapool_Thread[i]->WaitForThread();
 	}
 	
-
 	return 0;
 }

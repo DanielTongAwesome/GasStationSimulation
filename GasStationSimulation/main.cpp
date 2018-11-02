@@ -16,7 +16,11 @@ int main() {
 	/* final code for customer generation and line up*/
 
 	// exec file path
-	string pump_exe_file_path = "C:\\Users\\13358\\Dropbox\\CPEN333Windows\\GasStationSimulation\\Debug\\";
+
+
+	string pump_exe_file_path = "C:\\Users\\willi\\OneDrive\\CPEN333_Lab\\GasStationSimulation\\Debug\\";	
+	//string pump_exe_file_path = "C : \\Users\\13358\\Dropbox\\CPEN333Windows\\GasStationSimulation\\Debug\\break;";		 break;
+
 	string pump_exec = "PumpControl.exe";
 	string GSC_exec = "GasStationComputer.exe";
 	// run the process -- Pump
