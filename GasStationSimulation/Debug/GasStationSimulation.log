@@ -1,6 +1,5 @@
-﻿  Customer.cpp
-c:\users\willi\onedrive\cpen333_lab\gasstationsimulation\gasstationsimulation\customer.cpp(42): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\willi\onedrive\cpen333_lab\gasstationsimulation\gasstationsimulation\customer.cpp(46): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\willi\onedrive\cpen333_lab\gasstationsimulation\gasstationsimulation\customer.cpp(50): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\willi\onedrive\cpen333_lab\gasstationsimulation\gasstationsimulation\customer.cpp(54): warning C4305: '=': truncation from 'double' to 'float'
-  GasStationSimulation.vcxproj -> C:\Users\willi\OneDrive\CPEN333_Lab\GasStationSimulation\Debug\GasStationSimulation.exe
+﻿  rt.cpp
+  Customer.cpp
+  main.cpp
+  Generating Code...
+  GasStationSimulation.vcxproj -> C:\Users\13358\Dropbox\CPEN333Windows\GasStationSimulation\Debug\GasStationSimulation.exe

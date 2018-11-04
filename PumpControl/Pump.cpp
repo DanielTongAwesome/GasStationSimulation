@@ -97,6 +97,8 @@ int Pump::main(void)
 		myPumpData->fuelAmount = currentCustomer.fuelAmount;
 		myPumpData->SelectedFuelPrice = currentCustomer.SelectedFuelPrice;
 		myPumpData->purchaseTime = currentCustomer.purchaseTime;
+		myPumpData->dispensedFuel = 0;
+		myPumpData->cost = 0;
 		PS->Signal(); 
 
 
@@ -106,10 +108,8 @@ int Pump::main(void)
 
 		if (myPumpData->dispense_enable == 1)
 		{
-			// printf initial data.
-			printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);
 			PS->Signal();				     // GSC get the pump initial data of  dispense fuel and cost
-			while (myPumpData->fuelAmount - myPumpData->dispensedFuel >= 0.5)
+			while (float(myPumpData->fuelAmount) - myPumpData->dispensedFuel >= 0.5)
 			{
 				CS->Wait();
 				// update the dispensed fuel to DOS
@@ -118,6 +118,10 @@ int Pump::main(void)
 				myPumpData->cost = myPumpData->dispensedFuel *myPumpData->SelectedFuelPrice; // calculated cost
 				// Display real time dispensed fuel and Cost on the pump 
 				printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);			
+				if (float(myPumpData->fuelAmount) - myPumpData->dispensedFuel == 0) {
+					PS->Signal();
+					break;
+				}
 				PS->Signal();	
 				SLEEP(100);
 			}
