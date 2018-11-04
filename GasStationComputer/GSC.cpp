@@ -58,8 +58,10 @@ UINT __stdcall pump_user_status_thread(void *args) {
 	CSemaphore *CS = new CSemaphore (pumpCS, 1, 1);
 
 	// GSC Command Semaphore
+	CSemaphore *GSCPumpCost = new CSemaphore(pump_name + "GSCCommand", 0, 1);
 
-	while (1) {
+	while (1) 
+	{
 
 		// check which producer is pushing the message first
 		PS->Wait();
@@ -87,10 +89,20 @@ UINT __stdcall pump_user_status_thread(void *args) {
 		CS->Signal();
 
 
+
 		// Up dated the Gas Computer how much oil has been dispensed and the cost
-		PS->Wait();
-		printf("dispensed Fuel is %.1f, and cost is %.1f  \n", pumpData->dispensedFuel, pumpData->cost);		
-		CS->Signal();
+		while (GSCPumpCost->Read() == 0) // if the pump havn't finished dispending
+		{
+			PS->Wait();
+			printf("dispensed Fuel is %.1f, and cost is %.1f  \n", pumpData->dispensedFuel, pumpData->cost);
+			printf("GSCPumpCost->Read() is:  %d \n", GSCPumpCost->Read());
+			CS->Signal();
+		}
+
+		printf("Customer %-*s is leaving the pump \n", MAX_NAME_LENGTH, pumpData->userName);
+
+		GSCPumpCost->Wait();
+		
 	}
 
 	return 0;

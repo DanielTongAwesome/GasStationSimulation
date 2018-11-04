@@ -38,6 +38,8 @@ Pump::Pump(int pump_ID)
 
 	// GSC Command Semaphore
 	GSCCommand = new CSemaphore(pumpName + "GSCCommand", 0, 1);
+	// 
+	GSCPumpCost = new CSemaphore(pumpName + "GSCCommand", 0, 1);
 
 }
 
@@ -95,28 +97,35 @@ int Pump::main(void)
 		myPumpData->fuelAmount = currentCustomer.fuelAmount;
 		myPumpData->SelectedFuelPrice = currentCustomer.SelectedFuelPrice;
 		myPumpData->purchaseTime = currentCustomer.purchaseTime;
-
 		PS->Signal(); 
 
 
 		// when GSC has read data from datapool and 
 		// receive authorisation from GSC via the datapool
-		CS->Wait();
+		CS->Wait();   // Wait here until it receive a command from GSC
+
 		if (myPumpData->dispense_enable == 1)
 		{
-			myPumpData->dispensedFuel = 0;    // reset pump dispensed fuel first
+			// printf initial data.
+			printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);
+			PS->Signal();				     // GSC get the pump initial data of  dispense fuel and cost
 			while (myPumpData->fuelAmount - myPumpData->dispensedFuel >= 0.5)
 			{
-				myPumpData->dispensedFuel += PUMP_RATE;	//add dispensed Fuel
+				CS->Wait();
 				// update the dispensed fuel to DOS
-				myPumpData->cost = myPumpData->dispensedFuel *myPumpData->SelectedFuelPrice; // calculated cost
+				myPumpData->dispensedFuel += PUMP_RATE;	//add dispensed Fuel		
 				// update cost to the DOS
+				myPumpData->cost = myPumpData->dispensedFuel *myPumpData->SelectedFuelPrice; // calculated cost
+				// Display real time dispensed fuel and Cost on the pump 
+				printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);			
+				PS->Signal();	
+				SLEEP(100);
 			}
-			Sleep(30);
-			printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);
-			GSCCommand->Signal();
+			GSCPumpCost->Signal();
 		}
-		PS->Signal();
+		
+		GSCCommand->Signal();
+
 
 
 		SLEEP(1000);

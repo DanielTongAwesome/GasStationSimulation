@@ -36,8 +36,8 @@ private:
 
 	// GSC Command Semaphore
 	CSemaphore *GSCCommand;
-
-
+	// GSC real time display dispense fuel and cost
+	CSemaphore *GSCPumpCost;
 
 public:
 
