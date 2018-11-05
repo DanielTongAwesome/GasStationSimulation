@@ -8,7 +8,7 @@
 class GSC : public ActiveClass {
 
 private:
-
+	
 public:
 	GSC();
 	~GSC();

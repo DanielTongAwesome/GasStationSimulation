@@ -116,11 +116,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\rt.cpp" />
+    <ClCompile Include="FuelTank.cpp" />
     <ClCompile Include="GSC.cpp" />
     <ClCompile Include="GSCmain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\rt.h" />
+    <ClInclude Include="FuelTank.h" />
     <ClInclude Include="GSC.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

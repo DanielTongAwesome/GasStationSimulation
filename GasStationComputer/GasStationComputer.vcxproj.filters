@@ -4,9 +4,11 @@
     <ClCompile Include="..\rt.cpp" />
     <ClCompile Include="GSC.cpp" />
     <ClCompile Include="GSCmain.cpp" />
+    <ClCompile Include="FuelTank.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\rt.h" />
     <ClInclude Include="GSC.h" />
+    <ClInclude Include="FuelTank.h" />
   </ItemGroup>
 </Project>

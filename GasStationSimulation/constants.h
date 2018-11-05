@@ -8,16 +8,16 @@
 #define MIN_LEVEL 200
 #define PUMP_RATE 0.5f
 
-#define FUEL82 82
+#define FUEL82 1
 #define FUEL82_PRICE 1.459f
 
-#define FUEL87 87
+#define FUEL87 2
 #define FUEL87_PRICE 1.629f
 
-#define FUEL92 92
+#define FUEL92 3
 #define FUEL92_PRICE 1.709f
 
-#define FUEL97 97
+#define FUEL97 4
 #define FUEL97_PRICE 1.881f
 
 #define MAX_AMOUNT 20
