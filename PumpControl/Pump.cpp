@@ -97,6 +97,9 @@ int Pump::main(void)
 		myPumpData->fuelAmount = currentCustomer.fuelAmount;
 		myPumpData->SelectedFuelPrice = currentCustomer.SelectedFuelPrice;
 		myPumpData->purchaseTime = currentCustomer.purchaseTime;
+		// when each customer comes to the pump
+		// reset the dispensed fuel 
+		// reset the cost
 		myPumpData->dispensedFuel = 0;
 		myPumpData->cost = 0;
 		PS->Signal(); 
@@ -118,16 +121,18 @@ int Pump::main(void)
 				myPumpData->cost = myPumpData->dispensedFuel *myPumpData->SelectedFuelPrice; // calculated cost
 				// Display real time dispensed fuel and Cost on the pump 
 				printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);			
-				if (float(myPumpData->fuelAmount) - myPumpData->dispensedFuel == 0) {
+				printf(" %.1f \n", float(myPumpData->fuelAmount) - myPumpData->dispensedFuel);
+				/*if (float(myPumpData->fuelAmount) - myPumpData->dispensedFuel == 0) {
 					PS->Signal();
 					break;
-				}
+				}*/
 				PS->Signal();	
 				SLEEP(100);
 			}
-			GSCPumpCost->Signal();
+			
 		}
-		
+		printf("call GSCPumpCost \n");
+		GSCPumpCost->Signal();
 		GSCCommand->Signal();
 
 

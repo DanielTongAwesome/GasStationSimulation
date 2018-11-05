@@ -98,10 +98,17 @@ UINT __stdcall pump_user_status_thread(void *args) {
 			printf("GSCPumpCost->Read() is:  %d \n", GSCPumpCost->Read());
 			printf("Customer %-*s  \n", MAX_NAME_LENGTH, pumpData->userName);
 			CS->Signal();
+			// Note: Here is an important break statement
+			// Each time after cs->signal, we should check whether the fuelamount and dispensedfuel are equal or not
+			// If they are equal, then we finished the fill up process, then we should break the while loop
+			// other wise program will go back to ps->wait and give error output 
+			if (pumpData->dispensedFuel == pumpData->fuelAmount)
+			{
+				break;
+			}
 		}
 
 		printf("Customer %-*s is leaving the pump \n", MAX_NAME_LENGTH, pumpData->userName);
-
 		GSCPumpCost->Wait();
 		
 	}
