@@ -18,20 +18,40 @@ bool dispense[NUMBER_OF_PUMPS];
 
 void ReadKey()
 {
-	int command1;
-	//int command2;
-	command1 = _getch();
-	_putch(command1);
-	switch (command1) {
-	case '1':	dispense[0] = true; break;
-	case '2': 	dispense[1] = true; break;
-	case '3': 	dispense[2] = true; break;
-	case '4': 	dispense[3] = true; break;
-	default: break;
+	char command1;
+	char command2;
+	
+	// read first input command
+	cin >> command1;
 
+	if (command1 == 'd' || command1 == 'D') {
+		printf("Key press D received ... Please enter the Pump No. \n");
+		
+		// read second input command
+		cin >> command2;
+		switch (command2) {
+		case '1':	
+			std::cout << "Pump 1 been selected\n";
+			dispense[0] = true; 
+			break;
+		case '2': 	
+			std::cout << "Pump 2 been selected\n";
+			dispense[1] = true; 
+			break;
+		case '3': 	
+			std::cout << "Pump 3 been selected\n";
+			dispense[2] = true; 
+			break;
+		case '4': 	
+			std::cout << "Pump 4 been selected\n";
+			dispense[3] = true; 
+			break;
+		default: 
+			std::cout << "Please reselect the pump .... \n";
+			break;
+		}
+		
 	}
-
-
 }
 
 UINT __stdcall pump_user_status_thread(void *args) {
