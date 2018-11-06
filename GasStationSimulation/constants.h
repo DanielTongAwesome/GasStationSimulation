@@ -50,6 +50,7 @@ struct pumpInfo {
 	int fuelAmount;
 	float SelectedFuelPrice;
 	int dispense_enable;
+	int reject_enable;
 	float dispensedFuel;
 	float cost;
 
@@ -58,8 +59,8 @@ struct pumpInfo {
 
 // fuel tank data struct
 struct fuelTankInfo {
-	int fuel_tank_level[NUMBER_OF_TANKS];
-	int fuel_price[NUMBER_OF_TANKS];
+	float fuel_tank_level[NUMBER_OF_TANKS];
+	float fuel_price[NUMBER_OF_TANKS];
 };
 
 

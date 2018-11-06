@@ -1,8 +1,16 @@
 #include "GSC.h"
+#include "FuelTank.h"
 #include <ctime>
 #include <string>
 #include <sstream>
 #include <stdio.h>
+
+// dispense array
+bool dispense[NUMBER_OF_PUMPS];
+bool dispenseReject[NUMBER_OF_PUMPS];
+
+// initialize global bank 
+FuelTank *Fuel_Tank = new FuelTank();
 
 GSC::GSC() {
 
@@ -14,7 +22,6 @@ GSC::~GSC() {
 
 
 
-bool dispense[NUMBER_OF_PUMPS];
 
 void ReadKey()
 {
@@ -24,6 +31,7 @@ void ReadKey()
 	// read first input command
 	cin >> command1;
 
+	// Enable dispense
 	if (command1 == 'd' || command1 == 'D') {
 		printf("Key press D received ... Please enter the Pump No. \n");
 		
@@ -49,8 +57,37 @@ void ReadKey()
 		default: 
 			std::cout << "Please reselect the pump .... \n";
 			break;
+		}		
+	}
+
+	// Rejcect dispense
+	else if (command1 == 'r' || command1 == 'R') {
+		printf("Key press R received ... Please enter the Pump No. \n");
+
+		// read second input command
+		cin >> command2;
+		switch (command2)
+		{
+		case '1':
+			std::cout << "Pump 1 been rejected\n";
+			dispenseReject[0] = true;
+			break;
+		case '2':
+			std::cout << "Pump 2 been rejected\n";
+			dispenseReject[1] = true;
+			break;
+		case '3':
+			std::cout << "Pump 3 been rejected\n";
+			dispenseReject[2] = true;
+			break;
+		case '4':
+			std::cout << "Pump 4 been rejected\n";
+			dispenseReject[3] = true;
+			break;
+		default:
+			std::cout << "Please reselect the pump .... \n";
+			break;
 		}
-		
 	}
 }
 
@@ -98,25 +135,36 @@ UINT __stdcall pump_user_status_thread(void *args) {
 
 
 		// forever loop at here when GSC haven't authorise or reject it
-		while (dispense[Thread_Number - 1] != true) {} 
+		while ((dispense[Thread_Number - 1] == false) && (dispenseReject[Thread_Number - 1] == false)) 
+		{
+			continue;
+		} 
+		printf("While Loop break\n");
 		// when gas station attendant gives a command to pump
-		if (dispense[Thread_Number - 1] = true)
+		if (dispense[Thread_Number - 1] == true)
 		{
 			pumpData->dispense_enable = 1;
 			printf("pump%d is dispending fuel \n", Thread_Number);
 			dispense[Thread_Number - 1] = false;
 		}
+
+		else if (dispenseReject[Thread_Number - 1] == true)
+		{
+			pumpData->reject_enable = 1;
+			printf("pump%d rejects customer to fuel \n", Thread_Number);
+		}
+
 		CS->Signal();
 
 
 
-		// Up dated the Gas Computer how much oil has been dispensed and the cost
-		while (GSCPumpCost->Read() == 0) // if the pump havn't finished dispending
+		// Updated the Gas Computer how much oil has been dispensed and the cost
+		while (GSCPumpCost->Read() == 0 && dispenseReject[Thread_Number - 1] == false) // if the pump havn't finished dispending
 		{
 			PS->Wait();
 			printf("dispensed Fuel is %.1f, and cost is %.1f  \n", pumpData->dispensedFuel, pumpData->cost);
 			printf("GSCPumpCost->Read() is:  %d \n", GSCPumpCost->Read());
-			printf("Customer %-*s  \n", MAX_NAME_LENGTH, pumpData->userName);
+			//printf("Customer %-*s  \n", MAX_NAME_LENGTH, pumpData->userName);
 			CS->Signal();
 			// Note: Here is an important break statement
 			// Each time after cs->signal, we should check whether the fuelamount and dispensedfuel are equal or not
@@ -124,12 +172,26 @@ UINT __stdcall pump_user_status_thread(void *args) {
 			// other wise program will go back to ps->wait and give error output 
 			if (pumpData->dispensedFuel == pumpData->fuelAmount)
 			{
+				GSCPumpCost->Wait();
 				break;
 			}
 		}
 
+
+
+		if (dispenseReject[Thread_Number - 1] == true)
+		{
+			PS->Wait();
+			printf("pump%d rejects customer to fuel \n", Thread_Number);
+			CS->Signal();
+			dispenseReject[Thread_Number - 1] = false;
+		}
+		
+
+		
+
 		printf("Customer %-*s is leaving the pump \n", MAX_NAME_LENGTH, pumpData->userName);
-		GSCPumpCost->Wait();
+		
 		
 	}
 

@@ -1,9 +1,6 @@
 ﻿  rt.cpp
   FuelTank.cpp
-c:\users\13358\dropbox\cpen333windows\gasstationsimulation\gasstationcomputer\fueltank.cpp(6): error C2027: use of undefined type 'fuelTankData'
-  c:\users\13358\dropbox\cpen333windows\gasstationsimulation\gasstationcomputer\fueltank.h(12): note: see declaration of 'fuelTankData'
-c:\users\13358\dropbox\cpen333windows\gasstationsimulation\gasstationcomputer\fueltank.cpp(13): error C2064: term does not evaluate to a function taking 1 arguments
-c:\users\13358\dropbox\cpen333windows\gasstationsimulation\gasstationcomputer\fueltank.cpp(4): fatal error C1075: '{': no matching token found
   GSC.cpp
   GSCmain.cpp
   Generating Code...
+  GasStationComputer.vcxproj -> C:\Users\13358\Dropbox\CPEN333Windows\GasStationSimulation\Debug\GasStationComputer.exe

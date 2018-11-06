@@ -97,6 +97,8 @@ int Pump::main(void)
 		myPumpData->fuelAmount = currentCustomer.fuelAmount;
 		myPumpData->SelectedFuelPrice = currentCustomer.SelectedFuelPrice;
 		myPumpData->purchaseTime = currentCustomer.purchaseTime;
+		myPumpData->reject_enable = 0;
+		myPumpData->dispense_enable = 0;
 		// when each customer comes to the pump
 		// reset the dispensed fuel 
 		// reset the cost
@@ -108,10 +110,12 @@ int Pump::main(void)
 		// when GSC has read data from datapool and 
 		// receive authorisation from GSC via the datapool
 		CS->Wait();   // Wait here until it receive a command from GSC
-
+		
+		
+		// if detects dispense been enabled 
 		if (myPumpData->dispense_enable == 1)
 		{
-			PS->Signal();				     // GSC get the pump initial data of  dispense fuel and cost
+			PS->Signal();
 			while (float(myPumpData->fuelAmount) - myPumpData->dispensedFuel >= 0.5)
 			{
 				CS->Wait();
@@ -122,17 +126,23 @@ int Pump::main(void)
 				// Display real time dispensed fuel and Cost on the pump 
 				printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);			
 				printf(" %.1f \n", float(myPumpData->fuelAmount) - myPumpData->dispensedFuel);
-				/*if (float(myPumpData->fuelAmount) - myPumpData->dispensedFuel == 0) {
-					PS->Signal();
-					break;
-				}*/
+				
 				PS->Signal();	
 				SLEEP(100);
 			}
-			
+			GSCPumpCost->Signal();		
 		}
-		printf("call GSCPumpCost \n");
-		GSCPumpCost->Signal();
+
+		// if detects reject been enabled 
+		else if (myPumpData->reject_enable == 1)
+		{
+			PS->Signal();
+			printf("pump%d rejects customer to fuel \n", myPumpData->pumpID);
+			SLEEP(100);		
+		}
+
+
+		
 		GSCCommand->Signal();
 
 
