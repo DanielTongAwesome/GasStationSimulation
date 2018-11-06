@@ -8,6 +8,7 @@
 // dispense array
 bool dispense[NUMBER_OF_PUMPS];
 bool dispenseReject[NUMBER_OF_PUMPS];
+bool dispenseStatus[NUMBER_OF_PUMPS] = {true, true, true, true};
 
 // initialize global bank 
 FuelTank *Fuel_Tank = new FuelTank();
@@ -106,18 +107,22 @@ void ReadKey()
 			case '1':
 				std::cout << "Tank 1 been Refilled\n";
 				Fuel_Tank->refilling(FUEL82);
+				dispenseStatus[0] = true;
 				break;
 			case '2':
 				std::cout << "Tank 2 been Refilled\n";
 				Fuel_Tank->refilling(FUEL87);
+				dispenseStatus[1] = true;
 				break;
 			case '3':
 				std::cout << "Tank 3 been Refilled\n";
 				Fuel_Tank->refilling(FUEL92);
+				dispenseStatus[2] = true;
 				break;
 			case '4':
 				std::cout << "Tank 4 been Refilled\n";
 				Fuel_Tank->refilling(FUEL97);
+				dispenseStatus[3] = true;
 				break;
 			default:
 				std::cout << "Please reselect the Fuel Tank .... \n";
@@ -210,12 +215,20 @@ UINT __stdcall pump_user_status_thread(void *args) {
 			pumpData->fuelType,
 			pumpData->fuelAmount);
 
-		
 		// forever loop at here when GSC haven't authorise or reject it
 		while ((dispense[Thread_Number - 1] == false) && (dispenseReject[Thread_Number - 1] == false)) 
 		{
 			continue;
 		} 
+
+
+		while (dispenseStatus[pumpData->fuelType - 1] == false && dispenseReject[Thread_Number - 1] == false)
+		{
+			printf("Fuel Tank Fuel Type %d Below 200 L, Please Refill .... \n", pumpData->fuelType);
+			SLEEP(1000);
+			// refill
+		}
+
 		// printf("While Loop break\n");
 		// when gas station attendant gives a command to pump
 		if (dispense[Thread_Number - 1] == true)
@@ -243,7 +256,9 @@ UINT __stdcall pump_user_status_thread(void *args) {
 		while (GSCPumpCost->Read() == 0 && dispenseReject[Thread_Number - 1] == false) // if the pump havn't finished dispending
 		{
 			PS->Wait();
-			printf("dispensed Fuel is %.1f, and cost is %.1f  \n", pumpData->dispensedFuel, pumpData->cost);
+			printf("dispensed Fuel is %.1f, and cost is %.2f  \n", pumpData->dispensedFuel, pumpData->cost);
+			dispenseStatus[pumpData->fuelType - 1] = Fuel_Tank->decrement(pumpData->fuelType);
+	
 			// debug purpose
 			//printf("GSCPumpCost->Read() is:  %d \n", GSCPumpCost->Read());
 			//printf("Customer %-*s  \n", MAX_NAME_LENGTH, pumpData->userName);

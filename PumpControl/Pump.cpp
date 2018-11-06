@@ -130,7 +130,7 @@ int Pump::main(void)
 				// update cost to the DOS
 				myPumpData->cost = myPumpData->dispensedFuel * myPumpData->SelectedFuelPrice; // calculated cost
 				// Display real time dispensed fuel and Cost on the pump 
-				printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);			
+				printf("pump%d    dispensed %.1f amount of fuel    cost %.2f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);			
 				//printf(" %.1f \n", float(myPumpData->fuelAmount) - myPumpData->dispensedFuel);
 				
 				PS->Signal();	

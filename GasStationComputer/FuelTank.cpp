@@ -64,10 +64,11 @@ bool FuelTank::decrement(int fueltype)
 {
 	FuelTankMutex->Wait();
 	bool status = FALSE;
+	tank->fuel_tank_level[fueltype - 1] -= PUMP_RATE;
 	if (tank->fuel_tank_level[fueltype - 1] > MIN_LEVEL) {
 		status = TRUE;
-		tank->fuel_tank_level[fueltype - 1] -= PUMP_RATE;
 	}
+	FuelTankMutex->Signal();
 	return status;
 }
 

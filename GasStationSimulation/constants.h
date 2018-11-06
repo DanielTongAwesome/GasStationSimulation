@@ -53,7 +53,7 @@ struct pumpInfo {
 	int reject_enable;
 	float dispensedFuel;
 	float cost;
-
+	bool dispenseStatus;
 	time_t purchaseTime;
 };
 
