@@ -8,10 +8,9 @@ int main() {
 	GSC *gsc1[1];
 
 	// create each pump and resume
-	
 	gsc1[0] = new GSC();
 	gsc1[0]->Resume();
-	
+
 
 
 	while (1) {

@@ -64,5 +64,17 @@ struct fuelTankInfo {
 };
 
 
+// transaction history
+struct purchaseInfo {
+	char userName[MAX_NAME_LENGTH];
+	int creditCard_1;
+	int creditCard_2;
+	int creditCard_3;
+	int creditCard_4;
+	int fuelType;
+	float dispensedFuel;
+	float SelectedFuelPrice;
+	time_t purchaseTime;
+};
 
 #endif
