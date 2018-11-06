@@ -27,12 +27,14 @@ void ReadKey()
 {
 	char command1;
 	char command2;
+	float command3;
 	
 	// read first input command
 	cin >> command1;
 
 	// Enable dispense
-	if (command1 == 'd' || command1 == 'D') {
+	if (command1 == 'd' || command1 == 'D') 
+	{
 		printf("Key press D received ... Please enter the Pump No. \n");
 		
 		// read second input command
@@ -58,11 +60,12 @@ void ReadKey()
 			std::cout << "Please reselect the pump .... \n";
 			break;
 		}		
-	}
+	}//Enable dispense if condition end
 
 	// Rejcect dispense
-	else if (command1 == 'r' || command1 == 'R') {
-		printf("Key press R received ... Please enter the Pump No. \n");
+	else if (command1 == 'q' || command1 == 'Q') 
+	{
+		printf("Key press Q received ... Please enter the Pump No. \n");
 
 		// read second input command
 		cin >> command2;
@@ -88,7 +91,80 @@ void ReadKey()
 			std::cout << "Please reselect the pump .... \n";
 			break;
 		}
-	}
+	} //Rejcect if condition end
+
+
+	// Refill command
+	else if (command1 == 'r' || command1 == 'R') 
+	{
+			printf("Key press R received ... Please enter the Fuel Tank No. \n");
+
+			// read second input command
+			cin >> command2;
+			switch (command2)
+			{
+			case '1':
+				std::cout << "Tank 1 been Refilled\n";
+				Fuel_Tank->refilling(FUEL82);
+				break;
+			case '2':
+				std::cout << "Tank 2 been Refilled\n";
+				Fuel_Tank->refilling(FUEL87);
+				break;
+			case '3':
+				std::cout << "Tank 3 been Refilled\n";
+				Fuel_Tank->refilling(FUEL92);
+				break;
+			case '4':
+				std::cout << "Tank 4 been Refilled\n";
+				Fuel_Tank->refilling(FUEL97);
+				break;
+			default:
+				std::cout << "Please reselect the Fuel Tank .... \n";
+				break;
+			}
+	}// Refill if condition end
+
+	// Change cost command 
+	else if (command1 == 'c' || command1 == 'C') 
+	{
+			printf("Key press C received ... Please select the Fuel Type you want to change the price \n");
+
+			// read second input command
+			cin >> command2;
+			switch (command2)
+			{
+			case '1':
+				std::cout << "Please enter the price of Fuel Type 82 \n";
+				cin >> command3;
+				Fuel_Tank->setPrice(FUEL82, command3);
+				std::cout << "Price of Fuel Type 82 changed to "  << command3 << "\n";
+				std::cout << Fuel_Tank->getPrice(1) << "\n";
+				break;
+			case '2':
+				std::cout << "Please enter the price of Fuel Type 87 \n";
+				cin >> command3;
+				Fuel_Tank->setPrice(FUEL87, command3);
+				std::cout << "Price of Fuel Type 87 changed to "  << command3 << "\n";
+				break;
+			case '3':
+				std::cout << "Please enter the price of Fuel Type 92 \n";
+				cin >> command3;
+				Fuel_Tank->setPrice(FUEL92, command3);
+				std::cout << "Price of Fuel Type 92 changed to "  << command3 << "\n";
+				break;
+			case '4':
+				std::cout << "Please enter the price of Fuel Type 97 \n";
+				cin >> command3;
+				Fuel_Tank->setPrice(FUEL97, command3);
+				std::cout << "Price of Fuel Type 97 changed to "  << command3 << "\n";
+				break;
+			default:
+				std::cout << "Please reselect the Fuel Type from 1 to 4 .... \n";
+				break;
+			}
+	} // Change cost if condition end 
+
 }
 
 UINT __stdcall pump_user_status_thread(void *args) {
@@ -119,9 +195,10 @@ UINT __stdcall pump_user_status_thread(void *args) {
 
 	while (1) 
 	{
-
 		// check which producer is pushing the message first
 		PS->Wait();
+
+		// retrieve the customer infomation
 		printf("Pump %d Current user: %-*s  CreditCard: %d %d %d %d  FuelType: %d  Amount: %d \n",
 			pumpData->pumpID,
 			MAX_NAME_LENGTH,
@@ -133,16 +210,19 @@ UINT __stdcall pump_user_status_thread(void *args) {
 			pumpData->fuelType,
 			pumpData->fuelAmount);
 
-
+		
 		// forever loop at here when GSC haven't authorise or reject it
 		while ((dispense[Thread_Number - 1] == false) && (dispenseReject[Thread_Number - 1] == false)) 
 		{
 			continue;
 		} 
-		printf("While Loop break\n");
+		// printf("While Loop break\n");
 		// when gas station attendant gives a command to pump
 		if (dispense[Thread_Number - 1] == true)
 		{
+			pumpData->SelectedFuelPrice = Fuel_Tank->getPrice(pumpData->fuelType);
+			printf("the price is : %f \n", pumpData->SelectedFuelPrice);
+
 			pumpData->dispense_enable = 1;
 			printf("pump%d is dispending fuel \n", Thread_Number);
 			dispense[Thread_Number - 1] = false;
@@ -154,6 +234,7 @@ UINT __stdcall pump_user_status_thread(void *args) {
 			printf("pump%d rejects customer to fuel \n", Thread_Number);
 		}
 
+		
 		CS->Signal();
 
 
@@ -163,7 +244,8 @@ UINT __stdcall pump_user_status_thread(void *args) {
 		{
 			PS->Wait();
 			printf("dispensed Fuel is %.1f, and cost is %.1f  \n", pumpData->dispensedFuel, pumpData->cost);
-			printf("GSCPumpCost->Read() is:  %d \n", GSCPumpCost->Read());
+			// debug purpose
+			//printf("GSCPumpCost->Read() is:  %d \n", GSCPumpCost->Read());
 			//printf("Customer %-*s  \n", MAX_NAME_LENGTH, pumpData->userName);
 			CS->Signal();
 			// Note: Here is an important break statement
@@ -176,9 +258,9 @@ UINT __stdcall pump_user_status_thread(void *args) {
 				break;
 			}
 		}
+		
 
-
-
+		// process the GSC reject
 		if (dispenseReject[Thread_Number - 1] == true)
 		{
 			PS->Wait();
@@ -195,7 +277,7 @@ UINT __stdcall pump_user_status_thread(void *args) {
 		
 	}
 
-	return 0;
+	//return 0;
 }
 
 

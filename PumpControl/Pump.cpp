@@ -28,7 +28,7 @@ Pump::Pump(int pump_ID)
 	Full = new CSemaphore(pumpName + "Full", 0, 1);
 	Empty = new CSemaphore(pumpName + "Empty", 0, 1);
 
-	// create datapool
+	// create datapool for PUMP and GSC
 	pumpDatapool = new CDataPool(pumpName, sizeof(pumpInfo));
 	myPumpData = (struct pumpInfo *)(pumpDatapool->LinkDataPool());
 
@@ -40,6 +40,10 @@ Pump::Pump(int pump_ID)
 	GSCCommand = new CSemaphore(pumpName + "GSCCommand", 0, 1);
 	// 
 	GSCPumpCost = new CSemaphore(pumpName + "GSCCommand", 0, 1);
+
+	// create datapool for fueltank and Pump
+	//tankDataPool = new CDataPool("FuelTankDataPool", sizeof(struct fuelTankInfo));
+	//tank = (struct fuelTankInfo *)(tankDataPool->LinkDataPool());
 
 }
 
@@ -62,9 +66,11 @@ int Pump::main(void)
 	// craete the data struct to store the info send through pipeline
 	struct customerInfo currentCustomer;
 	
+
 	// each pump runs the following logic
 	while (1) {
 	
+
 		// traffic logic: control the entering of the customer
 		EntryGate->Signal();
 		Full->Wait();
@@ -84,8 +90,7 @@ int Pump::main(void)
 			currentCustomer.fuelAmount);
 
 
-
-		// save the current Customer's  information into datapool
+		// save the current Customer's information into datapool
 		CS->Wait();
 		myPumpData->pumpID = pumpID;
 		strcpy_s(myPumpData->userName, currentCustomer.name);
@@ -102,6 +107,7 @@ int Pump::main(void)
 		// when each customer comes to the pump
 		// reset the dispensed fuel 
 		// reset the cost
+		//myPumpData->SelectedFuelPrice = 0;
 		myPumpData->dispensedFuel = 0;
 		myPumpData->cost = 0;
 		PS->Signal(); 
@@ -122,10 +128,10 @@ int Pump::main(void)
 				// update the dispensed fuel to DOS
 				myPumpData->dispensedFuel += PUMP_RATE;	//add dispensed Fuel		
 				// update cost to the DOS
-				myPumpData->cost = myPumpData->dispensedFuel *myPumpData->SelectedFuelPrice; // calculated cost
+				myPumpData->cost = myPumpData->dispensedFuel * myPumpData->SelectedFuelPrice; // calculated cost
 				// Display real time dispensed fuel and Cost on the pump 
 				printf("pump%d    dispensed %.1f amount of fuel    cost %.1f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);			
-				printf(" %.1f \n", float(myPumpData->fuelAmount) - myPumpData->dispensedFuel);
+				//printf(" %.1f \n", float(myPumpData->fuelAmount) - myPumpData->dispensedFuel);
 				
 				PS->Signal();	
 				SLEEP(100);

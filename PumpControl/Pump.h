@@ -27,9 +27,11 @@ private:
 	CSemaphore *Full;
 	CSemaphore *Empty;
 
+
+	struct fuelTankInfo *tank;
 	// datapool
 	CDataPool *pumpDatapool;
-
+	CDataPool *tankDataPool;
 	// datapool semaphore
 	CSemaphore *PS;
 	CSemaphore *CS;

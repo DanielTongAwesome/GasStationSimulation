@@ -24,7 +24,7 @@ FuelTank::~FuelTank()
 void FuelTank::setPrice(int fueltype, float price)
 {
 	FuelTankMutex->Wait();
-	tank->fuel_price[fueltype] = price;
+	tank->fuel_price[fueltype - 1] = price;
 	FuelTankMutex->Signal();
 }
 
@@ -32,7 +32,7 @@ float FuelTank::getPrice(int fueltype)
 {
 	float currentPrice;
 	FuelTankMutex->Wait();
-	currentPrice = tank->fuel_price[fueltype];
+	currentPrice = tank->fuel_price[fueltype - 1];
 	FuelTankMutex->Signal();
 	return currentPrice;
 }
@@ -44,7 +44,7 @@ float FuelTank::getPrice(int fueltype)
 void FuelTank::refilling(int fueltype)
 {
 	FuelTankMutex->Wait();
-	tank->fuel_tank_level[fueltype] = TANK_SIZE;
+	tank->fuel_tank_level[fueltype - 1] = TANK_SIZE;
 	FuelTankMutex->Signal();
 }
 
@@ -52,9 +52,9 @@ bool FuelTank::increment(int fueltype)
 {
 	FuelTankMutex->Wait();
 	bool status = FALSE;
-	if (tank->fuel_tank_level[fueltype] < TANK_SIZE) {
+	if (tank->fuel_tank_level[fueltype - 1] < TANK_SIZE) {
 		status = TRUE;
-		tank->fuel_tank_level[fueltype] += PUMP_RATE;
+		tank->fuel_tank_level[fueltype - 1] += PUMP_RATE;
 	}
 	FuelTankMutex->Signal();
 	return status;
@@ -64,9 +64,9 @@ bool FuelTank::decrement(int fueltype)
 {
 	FuelTankMutex->Wait();
 	bool status = FALSE;
-	if (tank->fuel_tank_level[fueltype] > MIN_LEVEL) {
+	if (tank->fuel_tank_level[fueltype - 1] > MIN_LEVEL) {
 		status = TRUE;
-		tank->fuel_tank_level[fueltype] -= PUMP_RATE;
+		tank->fuel_tank_level[fueltype - 1] -= PUMP_RATE;
 	}
 	return status;
 }
@@ -77,7 +77,7 @@ float FuelTank::readFuelLevel(int fueltype)
 {
 	float fuelAmount;
 	FuelTankMutex->Wait();
-	fuelAmount = tank->fuel_price[fueltype];
+	fuelAmount = tank->fuel_price[fueltype - 1];
 	FuelTankMutex->Signal();
 	return fuelAmount;
 }
