@@ -1,11 +1,14 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "GSC.h"
 #include "FuelTank.h"
+//#include <time.h>
 #include <ctime>
 #include <string>
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
 #include <list>
+
 
 // dispense array
 bool dispense[NUMBER_OF_PUMPS];
@@ -25,8 +28,6 @@ GSC::GSC() {
 GSC::~GSC() {
 
 }
-
-
 
 
 void ReadKey()
@@ -195,10 +196,8 @@ void ReadKey()
 			cout << "Credit card number: "  << i->creditCard_1 << " " << i->creditCard_2 << " " << i->creditCard_3 << " " << i->creditCard_4 << endl;
 			cout << "FuelType: "			<< i->fuelType << endl;
 			cout << "Dispense Fuel: "		<< i->dispensedFuel << endl;
-			cout << "SelectedFuelPrice: "	<< i->SelectedFuelPrice << endl;
-			std::stringstream ts;
-			ts << i->purchaseTime;
-			cout << "purchaseTime: " << ts.str() << endl;
+			cout << "Selected Fuel Price: "	<< i->SelectedFuelPrice << endl;
+			cout << "Purchased Time: " << asctime(localtime(&i->purchaseTime)) << endl;
 			cout << endl;
 		}
 
