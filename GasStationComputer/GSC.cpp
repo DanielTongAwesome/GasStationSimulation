@@ -292,7 +292,7 @@ UINT __stdcall pump_user_status_thread(void *args) {
 			PS->Wait();
 			printf("dispensed Fuel is %.1f, and cost is %.2f  \n", pumpData->dispensedFuel, pumpData->cost);
 			dispenseStatus[pumpData->fuelType - 1] = Fuel_Tank->decrement(pumpData->fuelType);
-	
+			printf("Fuel Tank ---- Type %d  Remains %f\n", pumpData->fuelType, Fuel_Tank->readFuelLevel(pumpData->fuelType));
 			// debug purpose
 			//printf("GSCPumpCost->Read() is:  %d \n", GSCPumpCost->Read());
 			//printf("Customer %-*s  \n", MAX_NAME_LENGTH, pumpData->userName);

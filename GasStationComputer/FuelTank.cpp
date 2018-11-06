@@ -78,7 +78,7 @@ float FuelTank::readFuelLevel(int fueltype)
 {
 	float fuelAmount;
 	FuelTankMutex->Wait();
-	fuelAmount = tank->fuel_price[fueltype - 1];
+	fuelAmount = tank->fuel_tank_level[fueltype - 1];
 	FuelTankMutex->Signal();
 	return fuelAmount;
 }
