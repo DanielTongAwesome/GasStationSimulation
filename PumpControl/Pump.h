@@ -36,6 +36,11 @@ private:
 	CSemaphore *PS;
 	CSemaphore *CS;
 
+	// 
+	CMutex *screenMutex;
+	CMutex *myPipeMutex;
+
+
 	// GSC Command Semaphore
 	CSemaphore *GSCCommand;
 	// GSC real time display dispense fuel and cost
@@ -45,6 +50,7 @@ public:
 
 	// constructor
 	Pump(int pump_ID);
+	void clearLine(int linenumber);
 	// destructor
 	~Pump();
 	

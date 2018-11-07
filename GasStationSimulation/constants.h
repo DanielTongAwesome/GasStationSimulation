@@ -20,7 +20,7 @@
 #define FUEL97 4
 #define FUEL97_PRICE 1.881f
 
-#define MAX_AMOUNT 20
+#define MAX_AMOUNT 50
 #define MAX_NAME_LENGTH 13
 #define MAX_TANK_LITRES 2000
 

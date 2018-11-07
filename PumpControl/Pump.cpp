@@ -2,7 +2,6 @@
 #include <sstream>
 #include <stdio.h>
 #include <string>
-//#include <time.h>
 #include <ctime>
 
 // add one line in pump 
@@ -29,6 +28,10 @@ Pump::Pump(int pump_ID)
 	Full = new CSemaphore(pumpName + "Full", 0, 1);
 	Empty = new CSemaphore(pumpName + "Empty", 0, 1);
 
+	//create a screen control mutex
+	screenMutex = new CMutex("PumpScreen");
+	myPipeMutex = new CMutex("PumpName");
+
 	// create datapool for PUMP and GSC
 	pumpDatapool = new CDataPool(pumpName, sizeof(pumpInfo));
 	myPumpData = (struct pumpInfo *)(pumpDatapool->LinkDataPool());
@@ -42,10 +45,7 @@ Pump::Pump(int pump_ID)
 	// 
 	GSCPumpCost = new CSemaphore(pumpName + "GSCCommand", 0, 1);
 
-	// create datapool for fueltank and Pump
-	//tankDataPool = new CDataPool("FuelTankDataPool", sizeof(struct fuelTankInfo));
-	//tank = (struct fuelTankInfo *)(tankDataPool->LinkDataPool());
-
+	
 }
 
 
@@ -60,13 +60,22 @@ Pump::~Pump()
 
 }
 
+// pump clearline function cr empty lineseate 
+void Pump::clearLine(int lineNum)
+{
+	screenMutex->Wait();
+	MOVE_CURSOR(0, lineNum);
+	printf("                       "
+		"                           \n");
+	screenMutex->Signal();
+}
 
 // pump main 
 int Pump::main(void)
 {
 	// craete the data struct to store the info send through pipeline
 	struct customerInfo currentCustomer;
-	
+	int colourIndex = 15;
 
 	// each pump runs the following logic
 	while (1) {
@@ -78,8 +87,27 @@ int Pump::main(void)
 
 		// read from the pipeline
 		pipeline->Read(&currentCustomer);
-		
-		printf("Pipeline %d Current user: %-*s  CreditCard: %d %d %d %d  FuelType: %d  Amount: %d \n",
+
+
+
+		// head of the pump display monitor
+		screenMutex->Wait();
+		MOVE_CURSOR(0, (pumpID - 1) * 8);
+		colourIndex = pumpID + 9;
+		TEXT_COLOUR(colourIndex, 0);
+		printf("======================================================\n");
+		printf("---------------		Pump %d		--------------\n", pumpID);
+		printf("======================================================\n");
+
+		fflush(stdout);
+		screenMutex->Signal();
+		//TEXT_COLOUR(15, 0);
+
+		screenMutex->Wait();
+		MOVE_CURSOR(0, (pumpID - 1) * 8 + 3);
+		colourIndex = pumpID + 9;
+		TEXT_COLOUR(colourIndex, 0);
+		printf("Pump %d: Current user: %-*s \nCreditCard: %d %d %d %d  \nFuelType: %d  Amount: %d \n",
 			pumpID,
 			MAX_NAME_LENGTH,
 			currentCustomer.name,
@@ -89,6 +117,9 @@ int Pump::main(void)
 			currentCustomer.creditCard_4,
 			currentCustomer.fuelType,
 			currentCustomer.fuelAmount);
+		fflush(stdout);
+		screenMutex->Signal();
+		TEXT_COLOUR(15, 0);
 
 
 		// save the current Customer's information into datapool
@@ -108,17 +139,21 @@ int Pump::main(void)
 		// when each customer comes to the pump
 		// reset the dispensed fuel 
 		// reset the cost
-		//myPumpData->SelectedFuelPrice = 0;
 		myPumpData->dispensedFuel = 0;
 		myPumpData->cost = 0;
 		PS->Signal(); 
 
 
+
+		screenMutex->Wait();
+		TEXT_COLOUR(colourIndex, 0);
+		MOVE_CURSOR(0, ((myPumpData->pumpID) - 1) * 8 + 6);
+		printf("Customer is waiting for dispense......");
+		fflush(stdout);
+		screenMutex->Signal();
 		// when GSC has read data from datapool and 
 		// receive authorisation from GSC via the datapool
 		CS->Wait();   // Wait here until it receive a command from GSC
-		
-		
 		// if detects dispense been enabled 
 		if (myPumpData->dispense_enable == 1)
 		{
@@ -130,22 +165,38 @@ int Pump::main(void)
 				myPumpData->dispensedFuel += PUMP_RATE;	//add dispensed Fuel		
 				// update cost to the DOS
 				myPumpData->cost = myPumpData->dispensedFuel * myPumpData->SelectedFuelPrice; // calculated cost
-				// Display real time dispensed fuel and Cost on the pump 
-				printf("pump%d    dispensed %.1f amount of fuel    cost %.2f  \n", myPumpData->pumpID, myPumpData->dispensedFuel, myPumpData->cost);			
-				//printf(" %.1f \n", float(myPumpData->fuelAmount) - myPumpData->dispensedFuel);
 				
+																							  
+				// Display real time dispensed fuel and Cost on the pump 
+				screenMutex->Wait();
+				TEXT_COLOUR(colourIndex, 0);
+				MOVE_CURSOR(0, ((myPumpData->pumpID) - 1) * 8 + 6);
+				printf("dispensed amount: %.1f cost: %.2f          \n", myPumpData->dispensedFuel, myPumpData->cost);			
+				fflush(stdout);
+				screenMutex->Signal();		
 				PS->Signal();	
 				SLEEP(100);
 			}
+			SLEEP(1000);
 			GSCPumpCost->Signal();		
 		}
+
 
 		// if detects reject been enabled 
 		else if (myPumpData->reject_enable == 1)
 		{
 			PS->Signal();
-			printf("pump%d rejects customer to fuel \n", myPumpData->pumpID);
-			SLEEP(100);		
+	
+			screenMutex->Wait();
+			MOVE_CURSOR(0, (myPumpData->pumpID - 1) * 8 + 6);
+			TEXT_COLOUR(colourIndex, 0);
+
+			printf("pump%d rejects customer to fuel                               \n", myPumpData->pumpID);
+			SLEEP(100);	
+			MOVE_CURSOR(0, (myPumpData->pumpID - 1) * 8 + 6);
+			printf("                                                ");
+			screenMutex->Signal();
+			fflush(stdout);
 		}
 
 
@@ -155,8 +206,17 @@ int Pump::main(void)
 
 
 		SLEEP(1000);
-		printf("Customer %-*s is leaving the pump \n", MAX_NAME_LENGTH, currentCustomer.name);
+		colourIndex = myPumpData->pumpID + 9;
+		screenMutex->Wait();
+		MOVE_CURSOR(0, (myPumpData->pumpID - 1) * 8 + 6);
+		TEXT_COLOUR(colourIndex, 0);
+		printf("Customer %-*s is leaving the pump                            \n", MAX_NAME_LENGTH, currentCustomer.name);
 		// traffic logic: finshed pumping and exict from the waitlist
+		Sleep(1000);
+		MOVE_CURSOR(0, (myPumpData->pumpID - 1) * 8 + 6);
+		printf("                                                ");
+		screenMutex->Signal();
+		fflush(stdout);
 		ExitGate->Signal();
 		Empty->Wait();
 	}
