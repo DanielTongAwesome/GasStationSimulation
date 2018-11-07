@@ -59,8 +59,11 @@ Customer::Customer(int go_to_pump)
 	customerData.fuelAmount = rand() % (MAX_AMOUNT-10) +10 ; // "(MAX_AMOUNT-10) + 10" to make the minimal fuel amount is 10L
 
 	// initial print
+	int colourIndex = destination_pump_number + 9;
+	TEXT_COLOUR(colourIndex, 0);
 	printf("Creating customer %-*s and queing at Pump %d...\n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
-	
+	TEXT_COLOUR(15, 0);
+
 	// set up destination pump
 	std::ostringstream oss;
 	string pump = "Pump";
@@ -88,6 +91,10 @@ Customer::Customer(int go_to_pump)
 int Customer::main(void)
 {
 	// customer running logic
+	int colourIndex = 15;
+
+
+	// customer running logic
 	while (1) {
 		
 		// traffic logic: entering the pump
@@ -95,7 +102,10 @@ int Customer::main(void)
 		Full->Signal();
 
 		// customer select pump
+		colourIndex = destination_pump_number + 9;
+		TEXT_COLOUR(colourIndex, 0);
 		printf("I am customer %-*s want to use the pump %d \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
+		
 
 		// write customer data into pipeline
 		time_t current_t;
@@ -105,32 +115,44 @@ int Customer::main(void)
 		SLEEP(1000);
 
 		// customer swip credit card 
+		TEXT_COLOUR(colourIndex, 0);
 		printf("Customer %-*s has swiped his card at Pump %d ... \n", MAX_NAME_LENGTH,customerData.name, destination_pump_number);
 		Sleep(1000);
 		
 		// customer Removing the gas hose from the pump
+		TEXT_COLOUR(colourIndex, 0);
 		printf("Customer %-*s is removing the gas hose from the pump  %d  ... \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
 		SLEEP(1000);
 
 		// customer select fuelType
-		if (customerData.fuelType == FUEL82)
+		if (customerData.fuelType == FUEL82) {
+			TEXT_COLOUR(colourIndex, 0);
 			printf("Customer %-*s has selected fuel grade OCT82... \n", MAX_NAME_LENGTH, customerData.name);
-		else if (customerData.fuelType == FUEL87)
+		}
+		else if (customerData.fuelType == FUEL87) {
+			TEXT_COLOUR(colourIndex, 0);
 			printf("Customer %-*s has selected fuel grade OCT87... \n", MAX_NAME_LENGTH, customerData.name);
-		else if (customerData.fuelType == FUEL92)
+		}
+		else if (customerData.fuelType == FUEL92) {
+			TEXT_COLOUR(colourIndex, 0);
 			printf("Customer %-*s has selected fuel grade OCT92... \n", MAX_NAME_LENGTH, customerData.name);
-		else if (customerData.fuelType == FUEL97)
+		}
+		else if (customerData.fuelType == FUEL97) {
+			TEXT_COLOUR(colourIndex, 0);
 			printf("Customer %-*s has selected fuel grade OCT97... \n", MAX_NAME_LENGTH, customerData.name);
+		}
 		Sleep(1000);
 				
 		// wait the GSC Command
 		GSCCommand->Wait();
 
-		// customer Returning the hose to the pump.
+		// customer Returning the hose to the pump
+		TEXT_COLOUR(colourIndex, 0);
 		printf("Customer %-*s is returning the hose to the pump %d  ... \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
 		Sleep(1000);
 
 		// printing indicate customer is leaving 
+		TEXT_COLOUR(colourIndex, 0);
 		printf("Customer %-*s is leaving the pump %d \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
 	
 
