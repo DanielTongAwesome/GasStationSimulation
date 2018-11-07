@@ -2,7 +2,7 @@
 #define __Constans__
 
 #define NUMBER_OF_CUSTOMER 20
-#define NUMBER_OF_PUMPS 4
+#define NUMBER_OF_PUMPS 5
 #define NUMBER_OF_TANKS 4
 #define TANK_SIZE 500
 #define MIN_LEVEL 200

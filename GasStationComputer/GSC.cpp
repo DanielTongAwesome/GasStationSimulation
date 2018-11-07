@@ -13,7 +13,7 @@
 // dispense array
 bool dispense[NUMBER_OF_PUMPS];
 bool dispenseReject[NUMBER_OF_PUMPS];
-bool dispenseStatus[NUMBER_OF_PUMPS] = {true, true, true, true};
+bool dispenseStatus[NUMBER_OF_PUMPS] = {true, true, true, true, true};
 
 // initialize global bank 
 FuelTank *Fuel_Tank = new FuelTank();
@@ -63,6 +63,10 @@ void ReadKey()
 			std::cout << "Pump 4 been selected\n";
 			dispense[3] = true; 
 			break;
+		case '5':
+			std::cout << "Pump 5 been selected\n";
+			dispense[4] = true;
+			break;
 		default: 
 			std::cout << "Please reselect the pump .... \n";
 			break;
@@ -92,6 +96,10 @@ void ReadKey()
 			break;
 		case '4':
 			std::cout << "Pump 4 been rejected\n";
+			dispenseReject[3] = true;
+			break;
+		case '5':
+			std::cout << "Pump 5 been rejected\n";
 			dispenseReject[3] = true;
 			break;
 		default:
@@ -350,7 +358,7 @@ int GSC::main(void) {
 
 	printf("Hello ------ GSC \n");
 
-	int ThreadNum[NUMBER_OF_PUMPS] = { 1,2,3,4 };
+	int ThreadNum[NUMBER_OF_PUMPS] = {1,2,3,4,5};
 	CThread *Datapool_Thread[NUMBER_OF_PUMPS]; 
 
 	for (int i = 0; i < NUMBER_OF_PUMPS; i++) {
