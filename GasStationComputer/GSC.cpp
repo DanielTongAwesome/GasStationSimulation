@@ -14,7 +14,7 @@ using namespace std;
 // dispense array
 bool dispense[NUMBER_OF_PUMPS];
 bool dispenseReject[NUMBER_OF_PUMPS];
-bool dispenseStatus[NUMBER_OF_PUMPS] = {true, true, true, true, true};
+bool dispenseStatus[NUMBER_OF_TANKS] = {true, true, true, true};
 
 // initialize global bank 
 FuelTank *Fuel_Tank = new FuelTank();
@@ -51,12 +51,12 @@ void setScreen() {
 	CURSOR_OFF();
 	TEXT_COLOUR(3, 0);
 	MOVE_CURSOR(0, 0);
-	printf("================================================================================================\n");
-	printf("|------------------                GAS STATION COMPUTER  V 1.0                -----------------|\n");
-	printf("================================================================================================\n\n\n");
+	printf("====================================================================================================\n");
+	printf("|--------------------                GAS STATION COMPUTER  V 1.0                -------------------|\n");
+	printf("====================================================================================================\n\n\n");
 	TEXT_COLOUR(3, 0);
 	printf("FUEL TANKS\n");
-	printf("  OCT82               OCT87                OCT92              OCT97\n\n");
+	printf("  OCT82               OCT87              OCT92                 OCT97\n\n");
 	//add a move cursor here to change the fuel amount in the tank
 	printf("  %dL                %dL                %dL                 %dL\n", 500, 500, 500, 500);
 	printf("  $1.0                $1.1                $1.2                 $1.3\n\n");
