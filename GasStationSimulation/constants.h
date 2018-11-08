@@ -1,7 +1,7 @@
 #ifndef __Constans__
 #define __Constans__
 
-#define NUMBER_OF_CUSTOMER 20
+#define NUMBER_OF_CUSTOMER 50
 #define NUMBER_OF_PUMPS 5
 #define NUMBER_OF_TANKS 4
 #define TANK_SIZE 500
@@ -9,16 +9,16 @@
 #define PUMP_RATE 0.5f
 
 #define FUEL82 1
-#define FUEL82_PRICE 1.459f
+#define FUEL82_PRICE 1.0f
 
 #define FUEL87 2
-#define FUEL87_PRICE 1.629f
+#define FUEL87_PRICE 1.1f
 
 #define FUEL92 3
-#define FUEL92_PRICE 1.709f
+#define FUEL92_PRICE 1.2f
 
 #define FUEL97 4
-#define FUEL97_PRICE 1.881f
+#define FUEL97_PRICE 1.3f
 
 #define MAX_AMOUNT 50
 #define MAX_NAME_LENGTH 13
