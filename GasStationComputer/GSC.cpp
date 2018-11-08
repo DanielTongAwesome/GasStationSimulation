@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <list>
 
+using namespace std;
 
 // dispense array
 bool dispense[NUMBER_OF_PUMPS];
@@ -21,6 +22,9 @@ FuelTank *Fuel_Tank = new FuelTank();
 // initialize list transaction histotry
 list<struct purchaseInfo> purchaseHistoryList;
 
+// screen control mutex
+CMutex *screenControl = new CMutex("GSCScreen");
+
 GSC::GSC() {
 
 }
@@ -30,45 +34,125 @@ GSC::~GSC() {
 }
 
 
+// clear line function
+void clearLine(int lineNum) {
+
+	screenControl->Wait();
+	MOVE_CURSOR(0, lineNum);
+	printf("                                                                           ");
+	MOVE_CURSOR(0, lineNum);
+	screenControl->Signal();
+}
+
+
+// start up screen function
+
+void setScreen() {
+	CLEAR_SCREEN();
+	CURSOR_OFF();
+	TEXT_COLOUR(10, 0);
+	MOVE_CURSOR(0, 0);
+	printf("===================================================================\n");
+	printf("-----                   GAS STATION COMPUTER                 ------\n");
+	printf("===================================================================\n\n\n");
+	TEXT_COLOUR(10, 0);
+	printf("FUEL TANKS\n");
+	printf("  OCT82              OCT87               OCT92                OCT97\n\n");
+	//add a move cursor here to change the fuel amount in the tank
+	printf("  %dL                %dL                %dL                 %dL\n\n\n", 500, 500, 500, 500);
+	//add if statement, if the fuel amount is lower than 200, blink the LED and suspend the pump
+	//Display the message if the total amount of the fuel in the gas station is lower than 500
+	TEXT_COLOUR(9, 0);
+	//printf("Hello ------ GSC \n");
+	printf("PUMPs Status \n\n");
+	MOVE_CURSOR(0, 40);
+	TEXT_COLOUR(14, 0);
+	printf("Please Enter Commands:\n");      //line 41
+	//should replace the constant number with pumpID
+	printf("D + 1 --- dispense fuel to Pump 1\n");                     // line 42
+	printf("Q + 1 --- refuse to dispense fuel to Pump 1\n");           // line 43
+	printf("R + 1 --- refill the fuel tank 1.\n");   // line 44
+	//this function should be modified, like including the fuel price change function
+	printf("C + 1 --- change the cost of fuel type 1\n");                // line 45       
+	printf("  T   --- display the transactions history\n");              // line 46
+
+	TEXT_COLOUR(12, 0);
+	printf("PLEASE ENTER YOUR COMMAND HERE:\n");                            // line 47
+	TEXT_COLOUR(15, 0);
+}
+
 void ReadKey()
 {
-	char command1;
+	char command1 = 'x';
 	char command2;
 	float command3;
 	
 	// read first input command
-	cin >> command1;
+	if (TEST_FOR_KEYBOARD() == 1) {
+		screenControl->Wait();
+		MOVE_CURSOR(0, 47);
+		std::cin >> command1;
+		screenControl->Signal();
+
+	}
 
 	// Enable dispense
 	if (command1 == 'd' || command1 == 'D') 
 	{
+		screenControl->Wait();
+		MOVE_CURSOR(0, 49);
 		printf("Key press D received ... Please enter the Pump No. \n");
+		screenControl->Signal();
 		
 		// read second input command
-		cin >> command2;
+		std::cin >> command2;
 		switch (command2) {
-		case '1':	
+		case '1':
+			screenControl->Wait();
+			MOVE_CURSOR(0, 49);
+			clearLine(49);
 			std::cout << "Pump 1 been selected\n";
 			dispense[0] = true; 
+			screenControl->Signal();
 			break;
-		case '2': 	
+		case '2':
+			screenControl->Wait();
+			MOVE_CURSOR(0, 49);
+			clearLine(49);
 			std::cout << "Pump 2 been selected\n";
-			dispense[1] = true; 
+			dispense[1] = true;
+			screenControl->Signal();
 			break;
-		case '3': 	
+		case '3':
+			screenControl->Wait();
+			MOVE_CURSOR(0, 49);
+			clearLine(49);
 			std::cout << "Pump 3 been selected\n";
 			dispense[2] = true; 
+			screenControl->Signal();
 			break;
-		case '4': 	
+		case '4':
+			screenControl->Wait();
+			MOVE_CURSOR(0, 49);
+			clearLine(49);
 			std::cout << "Pump 4 been selected\n";
-			dispense[3] = true; 
+			dispense[3] = true;
+			screenControl->Signal();
 			break;
 		case '5':
+			screenControl->Wait();
+			MOVE_CURSOR(0, 49);
+			clearLine(49);
 			std::cout << "Pump 5 been selected\n";
 			dispense[4] = true;
+			screenControl->Signal();
 			break;
 		default: 
+			screenControl->Wait();
+			MOVE_CURSOR(0, 49);
+			clearLine(49);
 			std::cout << "Please reselect the pump .... \n";
+			screenControl->Signal();
 			break;
 		}		
 	}//Enable dispense if condition end
@@ -79,7 +163,7 @@ void ReadKey()
 		printf("Key press Q received ... Please enter the Pump No. \n");
 
 		// read second input command
-		cin >> command2;
+		std::cin >> command2;
 		switch (command2)
 		{
 		case '1':
@@ -115,7 +199,7 @@ void ReadKey()
 		printf("Key press R received ... Please enter the Fuel Tank No. \n");
 
 		// read second input command
-		cin >> command2;
+		std::cin >> command2;
 		switch (command2)
 		{
 		case '1':
@@ -150,31 +234,31 @@ void ReadKey()
 		printf("Key press C received ... Please select the Fuel Type you want to change the price \n");
 
 		// read second input command
-		cin >> command2;
+		std::cin >> command2;
 		switch (command2)
 		{
 		case '1':
 			std::cout << "Please enter the price of Fuel Type 82 \n";
-			cin >> command3;
+			std::cin >> command3;
 			Fuel_Tank->setPrice(FUEL82, command3);
 			std::cout << "Price of Fuel Type 82 changed to "  << command3 << "\n";
 			std::cout << Fuel_Tank->getPrice(1) << "\n";
 			break;
 		case '2':
 			std::cout << "Please enter the price of Fuel Type 87 \n";
-			cin >> command3;
+			std::cin >> command3;
 			Fuel_Tank->setPrice(FUEL87, command3);
 			std::cout << "Price of Fuel Type 87 changed to "  << command3 << "\n";
 			break;
 		case '3':
 			std::cout << "Please enter the price of Fuel Type 92 \n";
-			cin >> command3;
+			std::cin >> command3;
 			Fuel_Tank->setPrice(FUEL92, command3);
 			std::cout << "Price of Fuel Type 92 changed to "  << command3 << "\n";
 			break;
 		case '4':
 			std::cout << "Please enter the price of Fuel Type 97 \n";
-			cin >> command3;
+			std::cin >> command3;
 			Fuel_Tank->setPrice(FUEL97, command3);
 			std::cout << "Price of Fuel Type 97 changed to "  << command3 << "\n";
 			break;
@@ -215,6 +299,7 @@ void ReadKey()
 UINT __stdcall pump_user_status_thread(void *args) {
 
 	int Thread_Number = *(int *)(args);
+	int colorIndex = 0;
 	string pump_name = "Pump";
 	string pumpPS = "PS";
 	string pumpCS = "CS";
@@ -245,8 +330,11 @@ UINT __stdcall pump_user_status_thread(void *args) {
 		// check which producer is pushing the message first
 		PS->Wait();
 
+		screenControl->Wait();
+		MOVE_CURSOR(0, 10 + (4*pumpData->pumpID));
+		TEXT_COLOUR(10, 0);
 		// retrieve the customer infomation
-		printf("Pump %d Current user: %-*s  CreditCard: %d %d %d %d  FuelType: %d  Amount: %d \n",
+		printf("[Pump %d] Current user: %-*s  CreditCard: %d %d %d %d  FuelType: %d  Amount: %d \n",
 			pumpData->pumpID,
 			MAX_NAME_LENGTH,
 			pumpData->userName,
@@ -256,6 +344,8 @@ UINT __stdcall pump_user_status_thread(void *args) {
 			pumpData->creditCard_4,
 			pumpData->fuelType,
 			pumpData->fuelAmount);
+
+		screenControl->Signal();
 
 		// forever loop at here when GSC haven't authorise or reject it
 		while ((dispense[Thread_Number - 1] == false) && (dispenseReject[Thread_Number - 1] == false)) 
@@ -298,9 +388,15 @@ UINT __stdcall pump_user_status_thread(void *args) {
 		while (GSCPumpCost->Read() == 0 && dispenseReject[Thread_Number - 1] == false) // if the pump havn't finished dispending
 		{
 			PS->Wait();
+
+			screenControl->Wait();
+			TEXT_COLOUR(10, 0);
+			MOVE_CURSOR(0, 15 + 4*(pumpData->pumpID-1));
 			printf("dispensed Fuel is %.1f, and cost is %.2f  \n", pumpData->dispensedFuel, pumpData->cost);
 			dispenseStatus[pumpData->fuelType - 1] = Fuel_Tank->decrement(pumpData->fuelType);
 			printf("Fuel Tank ---- Type %d  Remains %f\n", pumpData->fuelType, Fuel_Tank->readFuelLevel(pumpData->fuelType));
+			fflush(stdout);
+			screenControl->Signal();
 			// debug purpose
 			//printf("GSCPumpCost->Read() is:  %d \n", GSCPumpCost->Read());
 			//printf("Customer %-*s  \n", MAX_NAME_LENGTH, pumpData->userName);
@@ -322,8 +418,13 @@ UINT __stdcall pump_user_status_thread(void *args) {
 				purchase_temp.dispensedFuel = pumpData->dispensedFuel;
 				purchase_temp.SelectedFuelPrice = pumpData->SelectedFuelPrice;
 				purchase_temp.purchaseTime = pumpData->purchaseTime;
-
+				screenControl->Wait();
+				TEXT_COLOUR(10, 0);
+				MOVE_CURSOR(0, 15 + 4 * (pumpData->pumpID - 1));
+				clearLine(15 + 4 * (pumpData->pumpID - 1));
 				printf("Purchase has been recorded ... \n");
+				fflush(stdout);
+				screenControl->Signal();
 				// read the purchase history and store it into the temp purchase_temp
 				purchaseHistoryList.push_back(purchase_temp);
 				GSCPumpCost->Wait();
@@ -342,10 +443,13 @@ UINT __stdcall pump_user_status_thread(void *args) {
 		}
 		
 
-		
-
+		screenControl->Wait();
+		TEXT_COLOUR(10, 0);
+		MOVE_CURSOR(0, 16 + 4 * (pumpData->pumpID - 1));
+		clearLine(16 + 4 * (pumpData->pumpID - 1));
 		printf("Customer %-*s is leaving the pump \n", MAX_NAME_LENGTH, pumpData->userName);
-		
+		fflush(stdout);
+		screenControl->Signal();
 		
 	}
 
@@ -356,7 +460,8 @@ UINT __stdcall pump_user_status_thread(void *args) {
 
 int GSC::main(void) {
 
-	printf("Hello ------ GSC \n");
+	
+	setScreen();
 
 	int ThreadNum[NUMBER_OF_PUMPS] = {1,2,3,4,5};
 	CThread *Datapool_Thread[NUMBER_OF_PUMPS]; 
