@@ -25,16 +25,19 @@ list<struct purchaseInfo> purchaseHistoryList;
 // screen control mutex
 CMutex *screenControl = new CMutex("GSCScreen");
 
+// constructor
 GSC::GSC() {
 
 }
 
+// destuctor
 GSC::~GSC() {
 
 }
 
 
 // clear line function
+// clear the line at certain line number
 void clearLine(int lineNum) {
 
 	screenControl->Wait();
@@ -83,6 +86,7 @@ void setScreen() {
 
 void ReadKey()
 {
+	// initialize it with an unrealted 'x'
 	char command1 = 'x';
 	char command2;
 	float command3;
@@ -110,54 +114,63 @@ void ReadKey()
 		
 		// read second input command
 		std::cin >> command2;
-		switch (command2) {
-		case '1':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Pump 1 been selected\n";
-			dispense[0] = true; 
-			screenControl->Signal();
-			break;
-		case '2':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Pump 2 been selected\n";
-			dispense[1] = true;
-			screenControl->Signal();
-			break;
-		case '3':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Pump 3 been selected\n";
-			dispense[2] = true; 
-			screenControl->Signal();
-			break;
-		case '4':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Pump 4 been selected\n";
-			dispense[3] = true;
-			screenControl->Signal();
-			break;
-		case '5':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Pump 5 been selected\n";
-			dispense[4] = true;
-			screenControl->Signal();
-			break;
-		default: 
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Please reselect the pump .... \n";
-			screenControl->Signal();
-			break;
+		
+		// check the command 2
+		switch (command2) 
+		{
+			// case 1 --> dispense pump 1
+			case '1':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Pump 1 been selected\n";
+				dispense[0] = true; 
+				screenControl->Signal();
+				break;
+			// case 2 --> dispense pump 2
+			case '2':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Pump 2 been selected\n";
+				dispense[1] = true;
+				screenControl->Signal();
+				break;
+			// case 3 --> dispense pump 3
+			case '3':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Pump 3 been selected\n";
+				dispense[2] = true; 
+				screenControl->Signal();
+				break;
+			// case 4 --> dispense pump 4
+			case '4':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Pump 4 been selected\n";
+				dispense[3] = true;
+				screenControl->Signal();
+				break;
+			// case 5 --> dispense pump 5
+			case '5':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Pump 5 been selected\n";
+				dispense[4] = true;
+				screenControl->Signal();
+				break;
+			// default case
+			default: 
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Please reselect the pump .... \n";
+				screenControl->Signal();
+				break;
 		}
 		clearLine(49);
 	}//Enable dispense if condition end
@@ -174,58 +187,64 @@ void ReadKey()
 		std::cin >> command2;
 		switch (command2)
 		{
-		case '1':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Pump 1 been rejected\n";
-			dispenseReject[0] = true;
-			screenControl->Signal();
-			break;
-		case '2':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Pump 2 been rejected\n";
-			dispenseReject[1] = true;
-			screenControl->Signal();
-			break;
-		case '3':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Pump 3 been rejected\n";
-			dispenseReject[2] = true;
-			screenControl->Signal();
-			break;
-		case '4':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Pump 4 been rejected\n";
-			dispenseReject[3] = true;
-			screenControl->Signal();
-			break;
-		case '5':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Pump 5 been rejected\n";
-			dispenseReject[4] = true;
-			screenControl->Signal();
-			break;
-		default:
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Please reselect the pump .... \n";
-			screenControl->Signal();
-			break;
+			// case 1 --- reject pump 1 consumer
+			case '1':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Pump 1 been rejected\n";
+				dispenseReject[0] = true;
+				screenControl->Signal();
+				break;
+			// case 2 --- reject pump 2 consumer
+			case '2':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Pump 2 been rejected\n";
+				dispenseReject[1] = true;
+				screenControl->Signal();
+				break;
+			// case 3 --- reject pump 3 consumer
+			case '3':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Pump 3 been rejected\n";
+				dispenseReject[2] = true;
+				screenControl->Signal();
+				break;
+			// case 4 --- reject pump 4 consumer
+			case '4':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Pump 4 been rejected\n";
+				dispenseReject[3] = true;
+				screenControl->Signal();
+				break;
+			// case 5 --- reject pump 5 consumer
+			case '5':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Pump 5 been rejected\n";
+				dispenseReject[4] = true;
+				screenControl->Signal();
+				break;
+			// default case
+			default:
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Please reselect the pump .... \n";
+				screenControl->Signal();
+				break;
 		}
 		clearLine(49);
 	} //Rejcect if condition end
 
-	// (pumpData->fuelType-1)*20+2, 8
+	// Note: ( (pumpData->fuelType-1)*20+2, 8 )
 	// Refill command
 	else if (command1 == 'f' || command1 == 'F') 
 	{
@@ -238,64 +257,70 @@ void ReadKey()
 		std::cin >> command2;
 		switch (command2)
 		{
-		case '1':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Tank 1 been Refilled\n";
-			MOVE_CURSOR(2, 8);
-			TEXT_COLOUR(10, 0);
-			printf("500.0L");
-			Fuel_Tank->refilling(FUEL82);
-			dispenseStatus[0] = true;
-			screenControl->Signal();
-			break;
-		case '2':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Tank 2 been Refilled\n";
-			MOVE_CURSOR(22, 8);
-			TEXT_COLOUR(10, 0);
-			printf("500.0L");
-			Fuel_Tank->refilling(FUEL87);
-			dispenseStatus[1] = true;
-			screenControl->Signal();
-			break;
-		case '3':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Tank 3 been Refilled\n";
-			MOVE_CURSOR(42, 8);
-			TEXT_COLOUR(10, 0);
-			printf("500.0L");
-			Fuel_Tank->refilling(FUEL92);
-			dispenseStatus[2] = true;
-			screenControl->Signal();
-			break;
-		case '4':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Tank 4 been Refilled\n";
-			MOVE_CURSOR(62, 8);
-			TEXT_COLOUR(10, 0);
-			printf("500.0L");
-			Fuel_Tank->refilling(FUEL97);
-			dispenseStatus[3] = true;
-			screenControl->Signal();
-			break;
-		default:
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Please reselect the Fuel Tank .... \n";
-			screenControl->Signal();
-			break;
+			// case 1 ----- Tank 1 refill
+			case '1':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Tank 1 been Refilled\n";
+				MOVE_CURSOR(2, 8);
+				TEXT_COLOUR(10, 0);
+				printf("500.0L");
+				Fuel_Tank->refilling(FUEL82);
+				dispenseStatus[0] = true;
+				screenControl->Signal();
+				break;
+			// case 2 ----- Tank 2 refill
+			case '2':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Tank 2 been Refilled\n";
+				MOVE_CURSOR(22, 8);
+				TEXT_COLOUR(10, 0);
+				printf("500.0L");
+				Fuel_Tank->refilling(FUEL87);
+				dispenseStatus[1] = true;
+				screenControl->Signal();
+				break;
+			// case 3 ----- Tank 3 refill
+			case '3':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Tank 3 been Refilled\n";
+				MOVE_CURSOR(42, 8);
+				TEXT_COLOUR(10, 0);
+				printf("500.0L");
+				Fuel_Tank->refilling(FUEL92);
+				dispenseStatus[2] = true;
+				screenControl->Signal();
+				break;
+			// case 4 ----- Tank 4 refill
+			case '4':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Tank 4 been Refilled\n";
+				MOVE_CURSOR(62, 8);
+				TEXT_COLOUR(10, 0);
+				printf("500.0L");
+				Fuel_Tank->refilling(FUEL97);
+				dispenseStatus[3] = true;
+				screenControl->Signal();
+				break;
+			// default case
+			default:
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Please reselect the Fuel Tank .... \n";
+				screenControl->Signal();
+				break;
 		}
 		clearLine(49);
 	}// Refill if condition end
+
 
 	// Change cost command 
 	else if (command1 == 'c' || command1 == 'C') 
@@ -309,97 +334,101 @@ void ReadKey()
 		std::cin >> command2;
 		switch (command2)
 		{
-		case '1':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			//std::cout << "Please enter the price of Fuel Type 82 \n";
-			//
-			while (TEST_FOR_KEYBOARD() == 0) {
-				continue;
-			}
-			clearLine(49);
-			screenControl->Wait();
-			MOVE_CURSOR(0, 47);
-			std::cin >> command3;
-			screenControl->Signal();
-			//
-			Fuel_Tank->setPrice(FUEL82, command3);
-			std::cout << "Price of Fuel Type 82 changed to "  << command3 << "\n";
-			MOVE_CURSOR(2, 9);
-			printf("$%.2f", command3);
-			screenControl->Signal();
-			break;
-		case '2':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			//std::cout << "Please enter the price of Fuel Type 87 \n";
-			//
-			while (TEST_FOR_KEYBOARD() == 0) {
-				continue;
-			}
-			clearLine(49);
-			screenControl->Wait();
-			MOVE_CURSOR(0, 47);
-			std::cin >> command3;
-			screenControl->Signal();
-			//
-			Fuel_Tank->setPrice(FUEL87, command3);
-			std::cout << "Price of Fuel Type 87 changed to "  << command3 << "\n";
-			MOVE_CURSOR(22, 9);
-			printf("$%.2f", command3);
-			screenControl->Signal();
-			break;
-		case '3':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			//std::cout << "Please enter the price of Fuel Type 92 \n";
-			//
-			while (TEST_FOR_KEYBOARD() == 0) {
-				continue;
-			}
-			clearLine(49);
-			screenControl->Wait();
-			MOVE_CURSOR(0, 47);
-			std::cin >> command3;
-			screenControl->Signal();
-			//
-			Fuel_Tank->setPrice(FUEL92, command3);
-			std::cout << "Price of Fuel Type 92 changed to "  << command3 << "\n";
-			MOVE_CURSOR(42, 9);
-			printf("$%.2f", command3);
-			screenControl->Signal();
-			break;
-		case '4':
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			//std::cout << "Please enter the price of Fuel Type 97 \n";
-			//
-			while (TEST_FOR_KEYBOARD() == 0) {
-				continue;
-			}
-			clearLine(49);
-			screenControl->Wait();
-			MOVE_CURSOR(0, 47);
-			std::cin >> command3;
-			screenControl->Signal();
-			//
-			Fuel_Tank->setPrice(FUEL97, command3);
-			std::cout << "Price of Fuel Type 97 changed to "  << command3 << "\n";
-			MOVE_CURSOR(63, 9);
-			printf("$%.2f", command3);
-			screenControl->Signal();
-			break;
-		default:
-			screenControl->Wait();
-			MOVE_CURSOR(0, 49);
-			clearLine(49);
-			std::cout << "Please reselect the Fuel Type from 1 to 4 .... \n";
-			screenControl->Signal();
-			break;
+			// case 1 ---- change the price of fueltype 1 
+			case '1':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+			
+				while (TEST_FOR_KEYBOARD() == 0) {
+					continue;
+				}
+				clearLine(49);
+				screenControl->Wait();
+				MOVE_CURSOR(0, 47);
+				std::cin >> command3;
+				screenControl->Signal();
+				//
+				Fuel_Tank->setPrice(FUEL82, command3);
+				std::cout << "Price of Fuel Type 82 changed to "  << command3 << "\n";
+				MOVE_CURSOR(2, 9);
+				printf("$%.2f", command3);
+				screenControl->Signal();
+				break;
+			// case 2 ---- change the price of fueltype 2 
+			case '2':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				//std::cout << "Please enter the price of Fuel Type 87 \n";
+				//
+				while (TEST_FOR_KEYBOARD() == 0) {
+					continue;
+				}
+				clearLine(49);
+				screenControl->Wait();
+				MOVE_CURSOR(0, 47);
+				std::cin >> command3;
+				screenControl->Signal();
+				//
+				Fuel_Tank->setPrice(FUEL87, command3);
+				std::cout << "Price of Fuel Type 87 changed to "  << command3 << "\n";
+				MOVE_CURSOR(22, 9);
+				printf("$%.2f", command3);
+				screenControl->Signal();
+				break;
+			// case 3 ---- change the price of fueltype 3 
+			case '3':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				//std::cout << "Please enter the price of Fuel Type 92 \n";
+				//
+				while (TEST_FOR_KEYBOARD() == 0) {
+					continue;
+				}
+				clearLine(49);
+				screenControl->Wait();
+				MOVE_CURSOR(0, 47);
+				std::cin >> command3;
+				screenControl->Signal();
+				//
+				Fuel_Tank->setPrice(FUEL92, command3);
+				std::cout << "Price of Fuel Type 92 changed to "  << command3 << "\n";
+				MOVE_CURSOR(42, 9);
+				printf("$%.2f", command3);
+				screenControl->Signal();
+				break;
+			// case 4 ---- change the price of fueltype 4 
+			case '4':
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				//std::cout << "Please enter the price of Fuel Type 97 \n";
+				//
+				while (TEST_FOR_KEYBOARD() == 0) {
+					continue;
+				}
+				clearLine(49);
+				screenControl->Wait();
+				MOVE_CURSOR(0, 47);
+				std::cin >> command3;
+				screenControl->Signal();
+				//
+				Fuel_Tank->setPrice(FUEL97, command3);
+				std::cout << "Price of Fuel Type 97 changed to "  << command3 << "\n";
+				MOVE_CURSOR(63, 9);
+				printf("$%.2f", command3);
+				screenControl->Signal();
+				break;
+			// default case
+			default:
+				screenControl->Wait();
+				MOVE_CURSOR(0, 49);
+				clearLine(49);
+				std::cout << "Please reselect the Fuel Type from 1 to 4 .... \n";
+				screenControl->Signal();
+				break;
 		}
 		clearLine(49);
 	} // Change cost if condition end 
@@ -415,11 +444,17 @@ void ReadKey()
 		cout << "               Transaction History                " << endl;
 		cout << "==================================================" << endl;
 
+		// create iterator
 		list<struct purchaseInfo>::iterator i;
+		// initlaize customer No
 		int customer_number = 0;
+
+		// check if the list is empty or not
 		if (purchaseHistoryList.begin() == purchaseHistoryList.end() ) {
 			cout << "Empty --- There is no transaction history !" << endl;
 		}
+
+		// if not empty then print each one
 		for (i = purchaseHistoryList.begin(); i != purchaseHistoryList.end(); ++i)
 		{
 			customer_number++;
@@ -437,6 +472,7 @@ void ReadKey()
 	} // show transaction history if condition end
 } //void ReadKey() end 
 
+// this thread update the pump user status
 UINT __stdcall pump_user_status_thread(void *args) {
 
 	int Thread_Number = *(int *)(args);
@@ -495,6 +531,7 @@ UINT __stdcall pump_user_status_thread(void *args) {
 		} 
 
 
+		// forever loop at here when fuel tank is below MIN_LEVEL or havenot reject it
 		while (dispenseStatus[pumpData->fuelType - 1] == false && dispenseReject[Thread_Number - 1] == false)
 		{
 			screenControl->Wait();
@@ -502,10 +539,12 @@ UINT __stdcall pump_user_status_thread(void *args) {
 			MOVE_CURSOR(0, 15 + 4 * (pumpData->pumpID - 1));
 			clearLine(15 + 4 * (pumpData->pumpID - 1));
 			TEXT_COLOUR(12, 0);
+			// print this msg to let the user know the fuel tank level is insuffcient
 			printf("Fuel Tank Fuel Type %d Below 200 L, Please Refill .... \n", pumpData->fuelType);
 			clearLine(16 + 4 * (pumpData->pumpID - 1));
 			fflush(stdout);
 			screenControl->Signal();
+			// if the fuel tank is now higher than the MIN_LEVEL clear alert
 			if (Fuel_Tank->readFuelLevel(pumpData->fuelType) > MIN_LEVEL) {
 				clearLine(15 + 4 * (pumpData->pumpID - 1));
 				break;
@@ -527,6 +566,7 @@ UINT __stdcall pump_user_status_thread(void *args) {
 			dispense[Thread_Number - 1] = false;
 		}
 
+		// if command reject been detected
 		else if (dispenseReject[Thread_Number - 1] == true)
 		{
 			pumpData->reject_enable = 1;
@@ -629,26 +669,29 @@ UINT __stdcall pump_user_status_thread(void *args) {
 }
 
 
-
+// active class main thread
 int GSC::main(void) {
 
-	
+	// start up call
 	setScreen();
 
+	// create thread number
 	int ThreadNum[NUMBER_OF_PUMPS] = {1,2,3,4,5};
 	CThread *Datapool_Thread[NUMBER_OF_PUMPS]; 
 
+	// run each thread
 	for (int i = 0; i < NUMBER_OF_PUMPS; i++) {
 		Datapool_Thread[i] = new CThread(pump_user_status_thread, SUSPENDED, &ThreadNum[i]);
 		Datapool_Thread[i]->Resume();
 	}
 
 	
-	// testing 
+	// read key 
 	while (1) {
 		ReadKey();
 	}
 
+	// you can ignore the below lines
 	for (int i = 0; i < NUMBER_OF_PUMPS; i++) {
 		Datapool_Thread[i]->WaitForThread();
 	}

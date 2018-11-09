@@ -12,7 +12,7 @@ int main() {
 	gsc1[0]->Resume();
 
 
-
+	// let the process keep running, otherwise it will be killed
 	while (1) {
 		continue;
 	}

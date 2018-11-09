@@ -42,7 +42,6 @@ Pump::Pump(int pump_ID)
 
 	// GSC Command Semaphore
 	GSCCommand = new CSemaphore(pumpName + "GSCCommand", 0, 1);
-	// 
 	GSCPumpCost = new CSemaphore(pumpName + "GSCCommand", 0, 1);
 
 	
@@ -92,8 +91,11 @@ int Pump::main(void)
 
 		// head of the pump display monitor
 		screenMutex->Wait();
+		//                  ----> (  x   ,         y        )    
+		// move the cursor to the (  0   ,  (pumpID - 1) * 8)
 		MOVE_CURSOR(0, (pumpID - 1) * 8);
 		colourIndex = pumpID + 9;
+		// assign each punch with different color
 		TEXT_COLOUR(colourIndex, 0);
 		printf("======================================================\n");
 		printf("---------------		Pump %d		--------------\n", pumpID);
@@ -101,12 +103,14 @@ int Pump::main(void)
 
 		fflush(stdout);
 		screenMutex->Signal();
-		//TEXT_COLOUR(15, 0);
 
 		screenMutex->Wait();
+		//                  ----> (  x   ,         y        )    
+		// move the cursor to the (  0   ,  (pumpID - 1) * 8 + 3)
 		MOVE_CURSOR(0, (pumpID - 1) * 8 + 3);
 		colourIndex = pumpID + 9;
 		TEXT_COLOUR(colourIndex, 0);
+		// print currentUser infomation
 		printf("Pump %d: Current user: %-*s \nCreditCard: %d %d %d %d  \nFuelType: %d  Amount: %d \n",
 			pumpID,
 			MAX_NAME_LENGTH,
@@ -144,7 +148,7 @@ int Pump::main(void)
 		PS->Signal(); 
 
 
-
+		// move cursor to (0, ((myPumpData->pumpID) - 1) * 8 + 6)
 		screenMutex->Wait();
 		TEXT_COLOUR(colourIndex, 0);
 		MOVE_CURSOR(0, ((myPumpData->pumpID) - 1) * 8 + 6);
@@ -170,6 +174,7 @@ int Pump::main(void)
 				// Display real time dispensed fuel and Cost on the pump 
 				screenMutex->Wait();
 				TEXT_COLOUR(colourIndex, 0);
+				// move cursor to (0, ((myPumpData->pumpID) - 1) * 8 + 6)
 				MOVE_CURSOR(0, ((myPumpData->pumpID) - 1) * 8 + 6);
 				printf("dispensed amount: %.1f cost: %.2f          \n", myPumpData->dispensedFuel, myPumpData->cost);			
 				fflush(stdout);
@@ -186,11 +191,11 @@ int Pump::main(void)
 		else if (myPumpData->reject_enable == 1)
 		{
 			PS->Signal();
-	
+			// move cursor to ( 0 , (myPumpData->pumpID - 1) * 8 + 6 )
 			screenMutex->Wait();
 			MOVE_CURSOR(0, (myPumpData->pumpID - 1) * 8 + 6);
 			TEXT_COLOUR(colourIndex, 0);
-
+			// print reject infomation
 			printf("pump%d rejects customer to fuel                               \n", myPumpData->pumpID);
 			SLEEP(100);	
 			MOVE_CURSOR(0, (myPumpData->pumpID - 1) * 8 + 6);
@@ -204,7 +209,7 @@ int Pump::main(void)
 		GSCCommand->Signal();
 
 
-
+		// move cursor to ( 0 , (myPumpData->pumpID - 1) * 8 + 6 )
 		SLEEP(1000);
 		colourIndex = myPumpData->pumpID + 9;
 		screenMutex->Wait();

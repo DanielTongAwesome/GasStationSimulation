@@ -107,10 +107,12 @@ int Customer::main(void)
 		printf("I am customer %-*s want to use the pump %d \n", MAX_NAME_LENGTH, customerData.name, destination_pump_number);
 		
 
+		// initialize current time
+		time_t current_t;   
+		time(&current_t);           // assign current time to current_t
+		customerData.purchaseTime = current_t;  // record it
+
 		// write customer data into pipeline
-		time_t current_t;
-		time(&current_t);
-		customerData.purchaseTime = current_t;
 		pipeline->Write(&customerData);
 		SLEEP(1000);
 

@@ -7,17 +7,6 @@
 
 int main() {
 	
-	
-	/* test code for customer pipeline */
-	/*Customer *car[1];
-	car[1] = new Customer(1);
-	car[1]->Resume();*/
-
-	/* final code for customer generation and line up*/
-
-	// exec file path
-
-
 	//string pump_exe_file_path = "C:\\Users\\willi\\OneDrive\\CPEN333_Lab\\GasStationSimulation\\Debug\\";	
 	string pump_exe_file_path = "C:\\Users\\13358\\Dropbox\\CPEN333Windows\\GasStationSimulation\\Debug\\";		
 

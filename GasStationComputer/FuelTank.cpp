@@ -1,5 +1,6 @@
 #include "FuelTank.h"
 
+// constructor
 FuelTank::FuelTank()
 {
 	FuelTankMutex = new CMutex("FuelTankMutex");
@@ -14,6 +15,7 @@ FuelTank::FuelTank()
 	}
 }
 
+// destructor
 FuelTank::~FuelTank()
 {
 	delete tank;
@@ -21,6 +23,7 @@ FuelTank::~FuelTank()
 	delete FuelTankMutex;
 }
 
+// set the price of each fueltype
 void FuelTank::setPrice(int fueltype, float price)
 {
 	FuelTankMutex->Wait();
@@ -28,6 +31,7 @@ void FuelTank::setPrice(int fueltype, float price)
 	FuelTankMutex->Signal();
 }
 
+// get the price of each fueltype
 float FuelTank::getPrice(int fueltype)
 {
 	float currentPrice;
@@ -36,11 +40,8 @@ float FuelTank::getPrice(int fueltype)
 	FuelTankMutex->Signal();
 	return currentPrice;
 }
-//
-//void FuelTank::dispense(int fueltype)
-//{
-//}
 
+// refilling the fill tank
 void FuelTank::refilling(int fueltype)
 {
 	FuelTankMutex->Wait();
@@ -48,6 +49,7 @@ void FuelTank::refilling(int fueltype)
 	FuelTankMutex->Signal();
 }
 
+// increase the fuel tank fuel level
 bool FuelTank::increment(int fueltype)
 {
 	FuelTankMutex->Wait();
@@ -60,11 +62,18 @@ bool FuelTank::increment(int fueltype)
 	return status;
 }
 
+// decrease the fuel tank fuel level: used for dispense
 bool FuelTank::decrement(int fueltype)
 {
 	FuelTankMutex->Wait();
+	// set status to false
 	bool status = FALSE;
+	// decrease the fuel tank level first
 	tank->fuel_tank_level[fueltype - 1] -= PUMP_RATE;
+
+	// check whether the fuel tank fuel level is lower than MIN_LEVEL or not
+	// if yes ----> set it to true
+	// if no -----> remain unchange
 	if (tank->fuel_tank_level[fueltype - 1] > MIN_LEVEL) {
 		status = TRUE;
 	}

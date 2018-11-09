@@ -1,6 +1,12 @@
 #ifndef __Constans__
 #define __Constans__
 
+/*
+	Constant File
+
+	Store all the necassay global constants
+*/
+
 #define NUMBER_OF_CUSTOMER 50
 #define NUMBER_OF_PUMPS 5
 #define NUMBER_OF_TANKS 4
@@ -8,6 +14,7 @@
 #define MIN_LEVEL 200
 #define PUMP_RATE 0.5f
 
+// initialize price
 #define FUEL82 1
 #define FUEL82_PRICE 1.0f
 

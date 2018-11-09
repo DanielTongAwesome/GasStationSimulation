@@ -9,8 +9,13 @@
 
 class FuelTank {
 private:
-	struct fuelTankInfo *tank;
+	// create tank data struct
+	struct fuelTankInfo *tank; 
+
+	// create tank data pool
 	CDataPool *tankDataPool;
+
+	// create fuel tank mutex
 	CMutex *FuelTankMutex;
 	
 
@@ -24,8 +29,8 @@ public:
 	float readFuelLevel(int fueltype);		   // read current fuel level
 	//bool dispense(int fueltype);			   // dispense fuel on the corresponding tank
 	void refilling(int fueltype);			   // refill fuel tank of the corresponding tank
-	bool increment(int fueltype);
-	bool decrement(int fueltype);
+	bool increment(int fueltype);			   // increment the fuel
+	bool decrement(int fueltype);			   // decrement the fuel
 	
 };
 
