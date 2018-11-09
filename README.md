@@ -1,5 +1,6 @@
 # GasStationSimulation
 This project simulates the gas station working
+Studetnts who is taking CPEN 333 System Software Engineering **CANNOT USE THIS CODE** in their final project.
 
 
 ## Run
